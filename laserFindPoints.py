@@ -1,13 +1,13 @@
 import cv2
 import numpy as np
 
-folderPath = "/home/nikifaets/code/laser/"
-img  = [cv2.imread(folderPath + "laser1.jpg"), cv2.imread(folderPath + "laser2.jpg"), cv2.imread(folderPath + "laser3.jpg"), cv2.imread(folderPath + "laser4.jpg"), cv2.imread(folderPath + "laser5.jpg")]
+folderPath = "laser/"
+img  = [cv2.imread(folderPath + "laser4.jpg"), cv2.imread(folderPath + "laser5.jpg"), cv2.imread(folderPath + "laser14.jpg")]
 
-for i in range(4, len(img)):
+for i in range(2, len(img)):
 	img[i] = cv2.resize(img[i], None, fx = 0.35, fy = 0.35)
 
-for im in range(4, len(img)):
+for im in range(2, len(img)):
 
 	cv2.imshow("col" + str(im), img[im])
 
@@ -30,10 +30,11 @@ for im in range(4, len(img)):
 				edged[i,j] = 0
 
 
-	canny = cv2.Canny(grayscale, 100,200)
+	canny = cv2.Canny(grayscale, 150,250)
 	
-	cv2.imshow("edge"+str(im), edged)
+	#cv2.imshow("edge"+str(im), edged)
 	cv2.imshow("canny" + str(im), canny)
+	cv2.imwrite("edged5.jpg", canny)
 	cv2.waitKey()
 
 """
