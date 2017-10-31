@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 
+# this algorithm extracts the points from the picture - outputs a new picture where only the points are to be seen
+
 folderPath = "laser/"
 img  = [cv2.imread(folderPath + "laser4.jpg"), cv2.imread(folderPath + "laser5.jpg"), cv2.imread(folderPath + "laser14.jpg")]
 

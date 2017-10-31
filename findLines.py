@@ -3,16 +3,46 @@ import numpy as np
 from connectPoints import connect 
 from connectPoints import sort
 from Point import Point
-	
+from PointNode import PointNode
+
+# the main file for the moment - the connected lines are processed here
 img = cv2.imread("edged5.jpg", 0)
+width,height = img.shape
+
+def drawConnectLines(nodes, width, height):
+
+	connectedLines = np.zeros((width, height), dtype = np.uint8)
+
+	for i in range(0, len(nodes)):
+
+		node = nodes[i]
+		x = node.x
+		y = node.y
+		xright = node.right.x
+		yright = node.right.y
+		xleft = node.left.x
+		yleft = node.left.y
+		xup = node.upcenter.x
+		yup = node.upcenter.y
+		xdown = node.downcenter.x
+		ydown = node.downcenter.y
+
+		cv2.circle(connectedLines, (x,y), 3, 100, -1)
+		cv2.line(connectedLines, (x, y), (xright, yright), 100, 1)
+		cv2.line(connectedLines, (x, y), (xleft, yleft), 100, 1)
+		cv2.line(connectedLines, (x, y), (xup, yup), 100, 1)
+		cv2.line(connectedLines, (x, y), (xdown, ydown), 100, 1)
+
+	return connectedLines
+
 
 cv2.imshow("img", img)
 
-width,height = img.shape
 print(width,height)
 
 points = np.zeros((width,height), np.uint8)
 pointsList = list()
+nodesList = list()
 mem = np.zeros((width, height), np.bool)
 draft = np.zeros((width,height), np.uint8)
 np.copyto(draft, img)
@@ -23,7 +53,7 @@ for i in range(0, height):
 			#print(img[j][i], i, j, type(img[j][i]))
 			cv2.circle(draft, (i,j), 5, (200,0,0), 1)
 			points[j][i] = 255
-			point = Point(i,j)
+			point = PointNode(i,j)
 			pointsList.append(point)
 			radius = 8
 			diameter = 2*radius
@@ -44,15 +74,16 @@ for i in range(0, height):
 cv2.imshow("points", points)
 cv2.imshow("draft", draft)
 cv2.waitKey()
-pointsList = sort(pointsList)
-lines = connect(pointsList)
-for i in range(0, len(lines)):
-	a = lines[i].start
-	b = lines[i].end
-	cv2.line(draft, (a.x, a.y), (b.x, b.y), 100, 1)
 
-print(len(lines), len(pointsList))
-cv2.imshow("draftWithLines", draft)
+pointsByY = sorted(pointsList, key = lambda point: point.y, reverse = False)
+pointsByX = sorted(pointsList, key = lambda point: point.x, reverse = False)
+
+connect(pointsByX, pointsByY)
+
+showLines = drawConnectLines(pointsList, width, height)
+
+#print(len(lines), len(pointsList))
+cv2.imshow("draftWithLines", showLines)
 cv2.waitKey()
 
 
