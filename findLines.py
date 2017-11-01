@@ -6,7 +6,8 @@ from Point import Point
 from PointNode import PointNode
 
 # the main file for the moment - the connected lines are processed here
-img = cv2.imread("edged5.jpg", 0)
+img = cv2.imread("edged4.jpg", 0)
+#img = cv2.imread("laser/demo.jpg", 0)
 width,height = img.shape
 
 def drawConnectLines(nodes, width, height):
@@ -55,7 +56,7 @@ for i in range(0, height):
 			points[j][i] = 255
 			point = PointNode(i,j)
 			pointsList.append(point)
-			radius = 8
+			radius = 5
 			diameter = 2*radius
 			
 			for x in range(j - radius, j + radius):
@@ -70,15 +71,12 @@ for i in range(0, height):
 
 
 
-
+print("points: ", len(pointsList))
 cv2.imshow("points", points)
 cv2.imshow("draft", draft)
 cv2.waitKey()
 
-pointsByY = sorted(pointsList, key = lambda point: point.y, reverse = False)
-pointsByX = sorted(pointsList, key = lambda point: point.x, reverse = False)
-
-connect(pointsByX, pointsByY)
+connect(pointsList)
 
 showLines = drawConnectLines(pointsList, width, height)
 

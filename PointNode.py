@@ -15,3 +15,14 @@ class PointNode(Point):
 		self.downright = nullpoint
 		self.downcenter = nullpoint
 		self.downleft = nullpoint
+
+	def setConnections(self,list):
+		self.upleft = list[0]
+		self.upcenter = list[1]
+		self.upright = list[2]
+		self.right = list[3]
+		self.left = list[4]
+		self.downright = list[5]
+		self.downcenter = list[6]
+		self.downleft = list[7]
+		

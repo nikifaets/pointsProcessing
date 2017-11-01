@@ -3,6 +3,7 @@ import numpy as np
 import math
 from Point import Point
 from Line import Line
+import heapq
 
 #the connection of the points happens here - input is an image with the extracted points - output is a list of lines
 
@@ -26,13 +27,76 @@ def sort(array):
     else:  # You need to hande the part at the end of the recursion - when you only have one element in your array, just return the array.
         return array
 
+
 def dist(a, b):
 
 	return math.sqrt(math.pow(a.x-b.x, 2) + math.pow(a.y-b.y, 2))
 
-def connect(pointsByX, pointsByY):
-	matchByY(pointsByY)
-	matchByX(pointsByX)
+def findNeighbours(point, list):
+
+	best = []
+	#bestDist = 9999
+	#heapq.heappush(best, (999, PointNode(0,0)))
+	for i in range(0, len(list)):
+		neigh = list[i] 
+		if(neigh != point):
+			currDist = dist(point,neigh)
+
+			heapq.heappush(best, (currDist, i))
+		
+	best.sort()			
+	resTemp = best[:8]
+	res = [list[i[1]] for i in resTemp]
+	if(len(res) < 8):
+		print("ooopa")
+	'''for i in resTemp:
+		print(i[0])
+	cv2.waitKey()'''
+	return res
+
+def makeConnection(point, list):
+
+	pointsByY = sorted(list, key = lambda point: point.y, reverse = False)
+	pointsByX = sorted(list, key = lambda point: point.x, reverse = False)
+
+	
+	
+
+	#search the four points to the right for minimal y difference
+	bestXmatch = point
+	bestYdiff = 999
+	for i in range (0, 4):
+		currDiff = math.fabs(point.y - pointsByX[i].y)
+		if(currDiff < bestYdiff):
+			bestYdiff = currDiff
+			bestXmatch = pointsByX[i]
+
+	point.right = bestXmatch
+	bestXmatch.left = point
+
+	#search the four points above for minimal x difference
+	bestYmatch = point
+	bestXdiff = 999
+	for i in range (0, 4):
+		currDiff = math.fabs(point.x - pointsByY[i].x)
+		if(currDiff < bestXdiff):
+			bestXdiff = currDiff
+			bestYmatch = pointsByY[i]
+
+	point.upcenter = bestYmatch
+	bestXmatch.left = point
+
+
+
+def connect(list):
+
+	for i in range(0, len(list)):
+
+		sortedNeighbours = findNeighbours(list[i], list)
+		makeConnection(list[i], sortedNeighbours)
+		
+
+		
 
 def matchByY(points):
 
@@ -62,18 +126,19 @@ def matchByY(points):
 				currPoint = points[j]
 				currDist = dist(point, currPoint)
 				better = False
+				currDiff = math.fabs(currPoint.y - point.y)
 
-				if(currDist < bestDist):
-					if(bestYdiff == -1 or math.fabs(point.y - currPoint.y) < 1.5*bestYdiff):
-						better = True
+				if(currDiff < bestYdiff):
+					better = True
 
-					if(better):
-						bestYdiff = math.fabs(point.y - currPoint.y)
-						bestDist = currDist
-						bestPoint = currPoint
+				if(better):
+					bestYdiff = math.fabs(point.y - currPoint.y)
+					bestDist = currDist
+					bestPoint = currPoint
 		if(bestPoint != nullPoint):
 			point.right = bestPoint
 			bestPoint.left = point
+	
 
 
 def matchByX(points):
@@ -104,19 +169,19 @@ def matchByX(points):
 				currPoint = points[j]
 				currDist = dist(point, currPoint)
 				better = False
+				currDiff = math.fabs(point.x - currPoint.x)
 
-				if(currDist < bestDist):
-					if(bestXdiff == -1 or math.fabs(point.x - currPoint.x) < 1.5*bestXdiff):
-						better = True
+				if(currDiff < bestXdiff):
+					better = True
 
-					if(better):
-						bestXdiff = math.fabs(point.x - currPoint.x)
-						bestDist = currDist
-						bestPoint = currPoint
+				if(better):
+					bestXdiff = math.fabs(currDiff)
+					bestDist = currDist
+					bestPoint = currPoint
 
-		if(bestPoint != nullPoint):
-			point.upcenter = bestPoint
-			bestPoint.downcenter = point
+		#if(bestPoint != nullPoint):
+		#	point.upcenter = bestPoint
+		#	bestPoint.downcenter = point
 	
 
 
