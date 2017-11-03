@@ -4,7 +4,7 @@ import numpy as np
 # this algorithm extracts the points from the picture - outputs a new picture where only the points are to be seen
 
 folderPath = "laser/"
-img  = [cv2.imread(folderPath + "laser4.jpg"), cv2.imread(folderPath + "laser5.jpg"), cv2.imread(folderPath + "laser18.jpg")]
+img  = [cv2.imread(folderPath + "laser4.jpg"), cv2.imread(folderPath + "laser5.jpg"), cv2.imread(folderPath + "laser32.jpg")]
 
 for i in range(2, len(img)):
 	img[i] = cv2.resize(img[i], None, fx = 0.35, fy = 0.35)
@@ -32,13 +32,13 @@ for im in range(2, len(img)):
 				edged[i,j] = 0
 
 
-	ret,thresh1 = cv2.threshold(grayscale,20,255,cv2.THRESH_BINARY)
-	canny = cv2.Canny(thresh1, 50,250)
+	ret,thresh1 = cv2.threshold(grayscale,50,255,cv2.THRESH_BINARY)
+	canny = cv2.Canny(thresh1, 150,250)
 	
 	#cv2.imshow("edge"+str(im), edged)
 	cv2.imshow("thresh", thresh1)
 	cv2.imshow("canny" + str(im), canny)
-	#cv2.imwrite("edged6.jpg", thresh1)
+	cv2.imwrite("edged12.jpg", thresh1)
 	cv2.waitKey()
 
 """
