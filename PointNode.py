@@ -6,15 +6,16 @@ class PointNode(Point):
 		super().__init__(x,y)
 
 		nullpoint = Point(self.x, self.y)
+		invalidDistance = 999;
 
-		self.upleft = nullpoint
-		self.upcenter = nullpoint
-		self.upright = nullpoint
-		self.right = nullpoint
-		self.left = nullpoint
-		self.downright = nullpoint
-		self.downcenter = nullpoint
-		self.downleft = nullpoint
+		self.upleft = (nullpoint,invalidDistance)
+		self.upcenter = (nullpoint,invalidDistance)
+		self.upright = (nullpoint,invalidDistance)
+		self.right = (nullpoint,invalidDistance)
+		self.left = (nullpoint,invalidDistance)
+		self.downright = (nullpoint,invalidDistance)
+		self.downcenter = (nullpoint,invalidDistance)
+		self.downleft = (nullpoint,invalidDistance)
 
 	def setConnections(self,list):
 		self.upleft = list[0]
