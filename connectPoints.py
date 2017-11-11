@@ -71,8 +71,9 @@ def makeConnection(point, list):
 			bestYdiff = currDiff
 			bestXmatch = pointsByX[i]
 
-	point.right = bestXmatch
-	bestXmatch.left = point
+	diff = math.sqrt(math.pow(bestXmatch.x-point.x,2) + math.pow(bestXmatch.y-point.y,2))
+	point.right = (bestXmatch, diff)
+	bestXmatch.left = (point, diff)
 
 	#search the four points above for minimal x difference
 	bestYmatch = point
@@ -83,8 +84,9 @@ def makeConnection(point, list):
 			bestXdiff = currDiff
 			bestYmatch = pointsByY[i]
 
-	point.upcenter = bestYmatch
-	bestXmatch.left = point
+	diff = math.sqrt(math.pow(bestYmatch.x-point.x,2) + math.pow(bestYmatch.y-point.y,2))
+	point.upcenter = (bestYmatch, diff)
+	bestXmatch.left = (point, diff)
 
 
 
@@ -97,7 +99,7 @@ def connect(list):
 		
 
 		
-
+#is not being used
 def matchByY(points):
 
 	for i in range(0, len(points)):
@@ -140,7 +142,7 @@ def matchByY(points):
 			bestPoint.left = point
 	
 
-
+#this is not being used aswell
 def matchByX(points):
 
 	for i in range(0, len(points)):

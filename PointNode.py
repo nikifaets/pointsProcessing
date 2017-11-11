@@ -1,4 +1,5 @@
 from Point import Point
+from Line import Line
 
 class PointNode(Point):
 
@@ -26,4 +27,10 @@ class PointNode(Point):
 		self.downright = list[5]
 		self.downcenter = list[6]
 		self.downleft = list[7]
-		
+
+	def convertToLine(self):
+		#return list of Line objects to the closest right and closest upper point
+		lines = list()
+		lines.append(Line(self, self.left[0], self.left[1]))
+		lines.append(Line(self, self.upcenter[0], self.upcenter[1]))
+		return lines

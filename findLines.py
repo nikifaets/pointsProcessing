@@ -1,41 +1,92 @@
 import cv2
 import numpy as np 
+import math
 from connectPoints import connect 
 from connectPoints import sort
 from Point import Point
 from PointNode import PointNode
 
 # the main file for the moment - the connected lines are processed here
-img = cv2.imread("demoEdge.jpg", 0)
+img = cv2.imread("edged19.jpg", 0)
 #img = cv2.imread("laser/demo.jpg", 0)
 width,height = img.shape
 
-def drawConnectLines(nodes, width, height):
+def drawLines(lines, width, height):
 
 	connectedLines = np.zeros((width, height), dtype = np.uint8)
+	minlen = 999
+	maxlen = 0
+	counter = 0
+	summ = 0
+	for i in lines:
+		x1 = i.start.x
+		y1 = i.start.y
 
-	for i in range(0, len(nodes)):
+		x2 = i.end.x
+		y2 = i.end.y
+		
 
-		node = nodes[i]
-		x = node.x
-		y = node.y
-		xright = node.right.x
-		yright = node.right.y
-		xleft = node.left.x
-		yleft = node.left.y
-		xup = node.upcenter.x
-		yup = node.upcenter.y
-		xdown = node.downcenter.x
-		ydown = node.downcenter.y
+		#print(i.length)
 
-		#cv2.circle(connectedLines, (x,y), 3, 100, -1)
-		cv2.line(connectedLines, (x, y), (xright, yright), 100, 1)
-		cv2.line(connectedLines, (x, y), (xleft, yleft), 100, 1)
-		cv2.line(connectedLines, (x, y), (xup, yup), 100, 1)
-		cv2.line(connectedLines, (x, y), (xdown, ydown), 100, 1)
+		if(i.length > maxlen and i.length!=999):
+			maxlen = i.length
+			counter+=1
+			summ +=i.length
+			
+
+		if(i.length<minlen):
+			print("kur")
+			counter+=1
+			minlen = i.length
+			summ +=i.length
+		#if(i.length==999):
+		#	cv2.line(connectedLines, (x1,y1), (x2,y2), 250, 2)
+
+	summ/= counter
+	print(int(minlen), int(maxlen), summ)
+	minlen = int(minlen)
+	maxlen = int(maxlen)
+	summ = (summ+maxlen)/2
+	maxlen = summ
+
+	step = int(240/(math.fabs(maxlen-minlen)))
+	print(step)
+	thicknessStep = 24
+
+
+	for i in lines:
+		x1 = i.start.x
+		y1 = i.start.y
+
+		x2 = i.end.x
+		y2 = i.end.y
+
+		brightness = minlen+int(math.sqrt(math.pow(x1-x2, 2) + math.pow(y1-y2, 2)))*step
+		#print(brightness)
+		thickness = int(brightness/thicknessStep)
+		thickness = int(thickness/3)
+		if(thickness > 3):
+			thickness = 3
+		if(thickness<1):
+			thickness =1
+
+
+		cv2.line(connectedLines, (x1,y1), (x2,y2), brightness, 1)
+
+		#if(i.length==999):
+		#	cv2.line(connectedLines, (x1,y1), (x2,y2), 250, 2)
+		
 
 	return connectedLines
 
+def collectLines(points):
+	lines = list()
+	for i in points:
+		line1, line2 = i.convertToLine()
+		lines.append(line1)
+		lines.append(line2)
+
+	return lines
 
 cv2.imshow("img", img)
 
@@ -56,7 +107,7 @@ for i in range(0, height):
 			points[j][i] = 255
 			point = PointNode(i,j)
 			pointsList.append(point)
-			radius = 20
+			radius = 3
 			diameter = 2*radius
 			
 			for x in range(j - radius, j + radius):
@@ -77,11 +128,15 @@ cv2.imshow("draft", draft)
 cv2.waitKey()
 
 connect(pointsList)
+lines = list();
+lines = collectLines(pointsList)
 
-showLines = drawConnectLines(pointsList, width, height)
+showLines = drawLines(lines, width, height)
 
 #print(len(lines), len(pointsList))
 cv2.imshow("draftWithLines", showLines)
+cv2.imwrite("demo4.jpg", showLines)
+cv2.imwrite("demo5.jpg", points)
 cv2.waitKey()
 
 
