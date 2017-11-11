@@ -7,7 +7,7 @@ from Point import Point
 from PointNode import PointNode
 
 # the main file for the moment - the connected lines are processed here
-img = cv2.imread("edged19.jpg", 0)
+img = cv2.imread("edged25.jpg", 0)
 #img = cv2.imread("laser/demo.jpg", 0)
 width,height = img.shape
 
@@ -107,7 +107,7 @@ for i in range(0, height):
 			points[j][i] = 255
 			point = PointNode(i,j)
 			pointsList.append(point)
-			radius = 3
+			radius = 5
 			diameter = 2*radius
 			
 			for x in range(j - radius, j + radius):
