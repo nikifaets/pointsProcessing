@@ -57,7 +57,7 @@ def getPoints(img, draft, points, width, height):
 
 	return pointsList
 # the main file for the moment - the connected lines are processed here
-img = cv2.imread("edged12.jpg", 0)
+img = cv2.imread("demo/edged12.jpg", 0)
 #img = cv2.imread("laser/demo.jpg", 0)
 width,height = img.shape
 
