@@ -6,11 +6,11 @@ def thresh(img):
 	step = 5
 	w = int(width/step)
 	h = int(height/step)
-	blur = cv2.GaussianBlur(img,(5,5),0)
+	blur = cv2.GaussianBlur(img,(3,3),1)
 	ret3,th3 = cv2.threshold(img,120,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 	th1 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY_INV,3,9)
-	th2 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
+	th2 = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             cv2.THRESH_BINARY_INV,3,9)
 
 	cv2.imshow("th1", th1)
@@ -21,7 +21,7 @@ def thresh(img):
 	return th2
 
 folderPath = "laser/"
-img  =cv2.imread(folderPath + "laser28.jpg")
+img  =cv2.imread(folderPath + "laser34.jpg")
 img = cv2.resize(img, None, fx = 0.35, fy = 0.35)
 
 height,width,channels = img.shape
@@ -38,7 +38,12 @@ for i in range(0, height):
 np.copyto(original, grayscale)
 roi = thresh(grayscale)
 #cv2.imshow("thresh", roi)
+
+median = cv2.medianBlur(roi,3)
+gaus = cv2.GaussianBlur(roi, (3,3),2)
+cv2.imshow("median", median)
 cv2.imshow("original_grayed", original)
+cv2.imshow("gaussian", gaus)
 #cv2.imshow("original", img)
-cv2.imwrite("edged25.jpg", roi)
+#cv2.imwrite("edged28.jpg", roi)
 cv2.waitKey()
