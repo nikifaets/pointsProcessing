@@ -15,7 +15,6 @@ while(True):
 	cv2.imshow("thresh", thresh)
 	cv2.imshow("grayscale", grayscale)
 
-	
 	cv2.imshow("points", points)
 	cv2.imshow("connected", connectedPoints)
 	if cv2.waitKey(1) & 0xFF == ord('q'):

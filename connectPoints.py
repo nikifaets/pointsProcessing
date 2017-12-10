@@ -50,6 +50,7 @@ def findNeighbours(point, list):
 	res = [list[i[1]] for i in resTemp]
 	if(len(res) < 8):
 		print("ooopa")
+		return -1
 	'''for i in resTemp:
 		print(i[0])
 	cv2.waitKey()'''
@@ -142,6 +143,8 @@ def connect(list):
 	for i in range(0, len(list)):
 
 		sortedNeighbours = findNeighbours(list[i], list)
+		if sortedNeighbours == -1:
+			return -1
 		makeConnection(list[i], sortedNeighbours)
 		
 
