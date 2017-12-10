@@ -3,44 +3,42 @@ import numpy as np
 
 # this algorithm extracts the points from the picture - outputs a new picture where only the points are to be seen
 
-folderPath = "laser/"
-img  =cv2.imread(folderPath + "laser18.jpg")
+
+#folderPath = "laser/"
+#img  =cv2.imread(folderPath + "laser18.jpg")
 
 
-img= cv2.resize(img, None, fx = 0.55, fy = 0.55)
+#img= cv2.resize(img, None, fx = 0.55, fy = 0.55)
 
 
+def threshImage(img):
 
-cv2.imshow("col", img)
+	height,width,channels = img.shape
+			
+	grayscale = np.zeros((height,width, 1), np.uint8)
+	#edged = np.zeros((height,width, 3), np.uint8)
+	#np.copyto(grayscale, img)
+	#np.copyto(edged, img)
+	for i in range(0, height):
+		for j in range(0, width):
+			b,g,r = img[i,j]
+			grayscale[i,j] = g   
+			
+			'''mid = int(g)+int(b)+int(r)
+			if(g - mid/3 > 15):
+				edged[i,j] = 255
 
-height,width,channels = img.shape
+			else:
+				edged[i,j] = 0'''
+
+
+	ret,thresh1 = cv2.threshold(grayscale,190,150,cv2.THRESH_BINARY)
+	#canny = cv2.Canny(thresh1, 150,250)
 		
-grayscale = np.zeros((height,width, 1), np.uint8)
-edged = np.zeros((height,width, 3), np.uint8)
-#np.copyto(grayscale, img)
-np.copyto(edged, img)
-for i in range(0, height):
-	for j in range(0, width):
-		b,g,r = img[i,j]
-		grayscale[i,j] = g   
-		
-		mid = int(g)+int(b)+int(r)
-		if(g - mid/3 > 15):
-			edged[i,j] = 255
+		#cv2.imshow("edge"+str(im), edged)
+	return (thresh1,grayscale)
+	#cv2.imwrite("edged19.jpg", thresh1)
 
-		else:
-			edged[i,j] = 0
-
-
-ret,thresh1 = cv2.threshold(grayscale,190,150,cv2.THRESH_BINARY)
-canny = cv2.Canny(thresh1, 150,250)
-	
-	#cv2.imshow("edge"+str(im), edged)
-cv2.imshow("thresh", thresh1)
-cv2.imshow("canny", canny)
-cv2.imshow("grayscale", grayscale)
-#cv2.imwrite("edged19.jpg", thresh1)
-cv2.waitKey()
 
 """
 for i in range(0, len(img)):

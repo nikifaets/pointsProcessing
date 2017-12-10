@@ -7,14 +7,15 @@ from Point import Point
 from PointNode import PointNode
 import heapq
 
-def getPoints(img, draft, points, width, height):
+def getPoints(img, draft, width, height):
 
 	pointsList = list()
 	mem = np.zeros((width, height), np.bool)
 
-	for i in range(0, height):
-		for j in range(0, width):
-			if(img[j][i] > 100 and mem[j][i] == False):
+	for i in range(0, width):
+		for j in range(0, height):
+			#print("kur ", img[j][i]>100, mem[j][i] == False)
+			if(img[j][i] > 100 and mem[j,i] == 0):
 				
 				maxw = (0,0)
 				minw = (9999,9999)
@@ -26,7 +27,7 @@ def getPoints(img, draft, points, width, height):
 
 				while len(heap) > 0:
 					curr = heapq.heappop(heap)
-					side = 3
+					side = 2
 					for h in range(curr[1]-side, curr[1]+side):
 						for w in range(curr[0]-side, curr[0]+side):
 							if w >= width:
@@ -36,7 +37,7 @@ def getPoints(img, draft, points, width, height):
 
 							if(mem[w][h] == False):
 								mem[w][h] = True
-								if img[w][h] == 255:
+								if img[h][w] == 255:
 									heapq.heappush(heap,(w,h))
 									
 									if h > maxh[1]:
@@ -57,9 +58,9 @@ def getPoints(img, draft, points, width, height):
 
 	return pointsList
 # the main file for the moment - the connected lines are processed here
-img = cv2.imread("demo/edged12.jpg", 0)
+#img = cv2.imread("demo/edged6.jpg", 0)
 #img = cv2.imread("laser/demo.jpg", 0)
-width,height = img.shape
+#width,height = img.shape
 
 def drawLines(lines, width, height):
 
@@ -92,39 +93,26 @@ def collectLines(points):
 
 	return lines
 
-cv2.imshow("img", img)
-cv2.waitKey()
+def createGrid(img):
+	#cv2.imshow("img", img)
 
-print(width,height)
+	height,width = img.shape
+	print(width,height)
 
-points = np.zeros((width,height), np.uint8)
-pointsList = list()
-nodesList = list()
-draft = np.zeros((width,height), np.uint8)
-#np.copyto(draft, img)
-img = cv2.medianBlur(img,1)
+	#points = np.zeros((width,height), np.uint8)
+	pointsList = list()
+	nodesList = list()
+	draft = np.zeros((width,height), np.uint8)
 
-cv2.imshow("img", img)
-cv2.waitKey()
+	pointsList = getPoints(img, draft, width, height)
 
-pointsList = getPoints(img, draft, points, width, height)
+	connect(pointsList)
+	lines = list()
+	lines = collectLines(pointsList)
 
-print("points: ", len(pointsList))
-cv2.imshow("points", points)
-cv2.imshow("draft", draft)
-cv2.waitKey()
+	showLines = drawLines(lines, width, height)
 
-connect(pointsList)
-lines = list();
-lines = collectLines(pointsList)
-
-showLines = drawLines(lines, width, height)
-
-#print(len(lines), len(pointsList))
-cv2.imshow("draftWithLines", showLines)
-cv2.imwrite("doc/connected1.jpg", showLines)
-#cv2.imwrite("demo5.jpg", points)
-cv2.waitKey()
+	return (draft, showLines)
 
 
 
