@@ -12,8 +12,8 @@ def getPoints(img, draft, width, height):
 	pointsList = list()
 	mem = np.zeros((width, height), np.bool)
 
-	for i in range(0, width):
-		for j in range(0, height):
+	for i in range(0, height):
+		for j in range(0, width):
 			#print("kur ", img[j][i]>100, mem[j][i] == False)
 			if(img[j][i] > 100 and mem[j,i] == 0):
 				
@@ -37,7 +37,7 @@ def getPoints(img, draft, width, height):
 
 							if(mem[w][h] == False):
 								mem[w][h] = True
-								if img[h][w] == 255:
+								if img[w][h] == 255:
 									heapq.heappush(heap,(w,h))
 									
 									if h > maxh[1]:
