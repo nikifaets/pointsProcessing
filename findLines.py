@@ -15,9 +15,10 @@ def getPoints(img, draft, width, height):
 
 	for i in range(0, width):
 		for j in range(0, height):
+
 			#print("kur ", img[j][i]>100, mem[j][i] == False)
 			if(img[j][i] > 100 and not mem[j,i]):
-				
+				print("START", j,i)
 				maxw = (0,0)
 				minw = (9999,9999)
 				maxh = (0,0)
@@ -25,36 +26,51 @@ def getPoints(img, draft, width, height):
 				#search white in the neighbours in a sideXside rectangle
 				heap = []
 				heapq.heappush(heap,(i,j))
-
+				
 				while len(heap) > 0:
 					curr = heapq.heappop(heap)
-					side = 2
+					#print("POINT ", curr[1],curr[0], img[j][i])
+					side = 3
 					for h in range(curr[1]-side, curr[1]+side):
 						for w in range(curr[0]-side, curr[0]+side):
-							if w >= width:
-								w = width-1
-							if h >= height:
-								h = height-1
+							if not (h==j and w==i):
+								#print(h,w)
+								if w >= width:
+									w = width-1
+								if w<0:
+									w = 0
+								if h >= height:
+									h = height-1
+								if h<0:
+									h = 0
+								
+								#print(h,w)
+								if(mem[h][w] == False):
+									mem[h][w] = True
+									if img[h][w] > 100:
+										heapq.heappush(heap,(w,h))
+										#print("pushed", h, w)
+										if h > maxh[1]:
+											maxh = (w,h)
+										if h < minh[1]:
+											minh = (w,h)
+										if w > maxw[0]:
+											maxw = (w,h)
+										if w < minw[0]:
+											minw = (w,h)
 
-							if(mem[h][w] == False):
-								mem[h][w] = True
-								if img[h][w] == 255:
-									heapq.heappush(heap,(w,h))
-									
-									if h > maxh[1]:
-										maxh = (w,h)
-									if h < minh[1]:
-										minh = (w,h)
-									if w > maxw[0]:
-										maxw = (w,h)
-									if w < minw[0]:
-										minw = (w,h)
-
-				midh = int((maxh[1] + minh[1] + maxw[1] + minw[1])/4)
-				midw = int((maxh[0] + minh[0] + maxw[0] + minw[0])/4)
-				#print(midh,midw)
-				pointsList.append(PointNode(midh,midw))
-				draft[h][w] = 255
+				midh = int((maxh[1] + minh[1])/2)
+				midw = int((maxw[0] + minw[0])/2)
+				print("w ",midw,maxw[0],minw[0])
+				print("h ",midh,maxh[1], minh[1])
+				if not (maxh[0] == 0 or minh[0] == 9999 or minw[0] == 9999 or maxw[0] == 0):
+					print(midh,midw)
+					'''draft[maxh[1],maxh[0]]=200
+					draft[minh[1],minh[0]]=200
+					draft[maxw[1],maxw[0]]=200
+					draft[minw[1],minw[0]]=200'''
+					pointsList.append(PointNode(midh,midw))
+					draft[midh][midw] = 255
 									
 
 	return (pointsList,draft)
@@ -126,4 +142,5 @@ def test(img):
 	cv2.waitKey()
 
 
-  
+img = cv2.imread("demo/edged13.jpg", 0)
+test(img)

@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+from extractor import thresh
 
 # this algorithm extracts the points from the picture - outputs a new picture where only the points are to be seen
 
@@ -32,7 +33,7 @@ def threshImage(img):
 				edged[i,j] = 0'''
 
 
-	ret,thresh1 = cv2.threshold(grayscale,190,150,cv2.THRESH_BINARY)
+	thresh1 = thresh(grayscale)
 	#canny = cv2.Canny(thresh1, 150,250)
 		
 		#cv2.imshow("edge"+str(im), edged)
