@@ -10,7 +10,17 @@ from extractor import thresh
 
 
 #img= cv2.resize(img, None, fx = 0.55, fy = 0.55)
+def increase_brightness(img, value):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(hsv)
 
+    lim = 255 - value
+    v[v > lim] = 255
+    v[v <= lim] += value
+
+    final_hsv = cv2.merge((h, s, v))
+    img = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+    return img
 
 def threshImage(img):
 
@@ -25,14 +35,18 @@ def threshImage(img):
 		for j in range(0, width):
 			
 			b,g,r = img[i,j]
-			'''mid = b/3+g/3+r/3
-			if g>0.5*mid and b<0.5*mid and r<0.5*mid:
-				grayscale.itemset((i,j,0),255)
+			#mid = b/3+g/3+r/3
+			'''if g>=r+20 and g>=b+20:
+				grayscale.itemset((i,j,0),g)
 			else: 
-				grayscale.itemset((i,j,0),0)  '''
-			
+				grayscale.itemset((i,j,0),0) '''
+	
 			grayscale.itemset((i,j,0),g)
-
+	print(grayscale[0][0])
+	print(type(grayscale))
+	grayscale = cv2.add(grayscale, np.array([-200.0]))
+	print(grayscale[0][0])
+	print(type(grayscale))
 
 	thresh1 = thresh(grayscale)
 	#canny = cv2.Canny(thresh1, 150,250)

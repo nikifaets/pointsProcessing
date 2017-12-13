@@ -142,4 +142,5 @@ def test(img):
 	cv2.waitKey()
 
 
-
+'''img = cv2.imread("demo/edged24.jpg",0)
+test(img)'''

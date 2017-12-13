@@ -146,6 +146,11 @@ def makeConnectionPerpendiculars(point,list):
 		point.write(i,32)
 
 
+def makeConnectionByClosestTwo(point,list):
+	point.write(list[0],32)
+	point.write(list[1],32)
+	point.write(list[2],32)
+	point.write(list[3],32)
 
 
 
@@ -157,7 +162,7 @@ def connect(list):
 		if sortedNeighbours == -1:
 			return -1
 		#makeConnection(list[i], sortedNeighbours)
-		makeConnectionPerpendiculars(list[i],sortedNeighbours)
+		makeConnectionByClosestTwo(list[i],sortedNeighbours)
 		
 
 
