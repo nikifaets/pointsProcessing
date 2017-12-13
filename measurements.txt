@@ -1,0 +1,8 @@
+ 217px = ~4cm (20cm dist) proportion: 54.25
+ 333px = ~6.3 (20cm dist) proportion: 52.9
+ 163px = 3cm  (15cm dist) proportion: 54.33
+ 273px = 5cm (15cm dist) proportion: 54.6
+ 54px  = 1cm (15cm dist) proportion:54
+
+1px = 1/54.016cm
+

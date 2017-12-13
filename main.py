@@ -7,21 +7,22 @@ import findLines as fl
 cap = cv2.VideoCapture(0)
 cap.set(3,320)
 cap.set(4,240)
-'''while(True):
+while(True):
 
 	ret, img = cap.read()
 	thresh, grayscale = cpt.threshImage(img)
 	points, connectedPoints = fl.createGrid(thresh)
-
+	#points = fl.createGrid(thresh)
+	cv2.imshow("img", img)
 	cv2.imshow("thresh", thresh)
 	cv2.imshow("grayscale", grayscale)
 
 	cv2.imshow("points", points)
 	cv2.imshow("connected", connectedPoints)
 	if cv2.waitKey(1) & 0xFF == ord('q'):
-		break'''
+		break
 
-print("TAKING ONE WITH NO LASER")
+'''print("TAKING ONE WITH NO LASER")
 for i in range(0,35):
 	if(i%5 == 0):
 		print(5-i/5)
@@ -56,4 +57,4 @@ cv2.imshow("grayscale", grayscale)
 
 cv2.imshow("points", points)
 cv2.imshow("connected", connectedPoints)
-cv2.waitKey()
+cv2.waitKey()'''

@@ -9,7 +9,7 @@ import heapq
 
 def getPoints(img, draft, width, height):
 
-	print(height,width)
+	
 	pointsList = list()
 	mem = np.zeros((height, width), np.bool)
 
@@ -18,7 +18,7 @@ def getPoints(img, draft, width, height):
 
 			#print("kur ", img[j][i]>100, mem[j][i] == False)
 			if(img[j][i] > 100 and not mem[j,i]):
-				print("START", j,i)
+				
 				maxw = (0,0)
 				minw = (9999,9999)
 				maxh = (0,0)
@@ -61,10 +61,9 @@ def getPoints(img, draft, width, height):
 
 				midh = int((maxh[1] + minh[1])/2)
 				midw = int((maxw[0] + minw[0])/2)
-				print("w ",midw,maxw[0],minw[0])
-				print("h ",midh,maxh[1], minh[1])
+
 				if not (maxh[0] == 0 or minh[0] == 9999 or minw[0] == 9999 or maxw[0] == 0):
-					print(midh,midw)
+					
 					'''draft[maxh[1],maxh[0]]=200
 					draft[minh[1],minh[0]]=200
 					draft[maxw[1],maxw[0]]=200
@@ -114,7 +113,7 @@ def createGrid(img):
 	#cv2.imshow("img", img)
 
 	height,width = img.shape
-	print(width,height)
+	
 
 	#points = np.zeros((width,height), np.uint8)
 	pointsList = list()
@@ -133,6 +132,7 @@ def createGrid(img):
 	showLines = drawLines(lines, width, height)
 
 	return (draft, showLines)
+	#return draft
 
 
 def test(img):
@@ -142,5 +142,4 @@ def test(img):
 	cv2.waitKey()
 
 
-img = cv2.imread("demo/edged13.jpg", 0)
-test(img)
+

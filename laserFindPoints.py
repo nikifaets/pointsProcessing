@@ -17,20 +17,21 @@ def threshImage(img):
 	height,width,channels = img.shape
 			
 	grayscale = np.zeros((height,width, 1), np.uint8)
+
 	#edged = np.zeros((height,width, 3), np.uint8)
 	#np.copyto(grayscale, img)
 	#np.copyto(edged, img)
 	for i in range(0, height):
 		for j in range(0, width):
-			b,g,r = img[i,j]
-			grayscale[i,j] = g   
 			
-			'''mid = int(g)+int(b)+int(r)
-			if(g - mid/3 > 15):
-				edged[i,j] = 255
-
-			else:
-				edged[i,j] = 0'''
+			b,g,r = img[i,j]
+			'''mid = b/3+g/3+r/3
+			if g>0.5*mid and b<0.5*mid and r<0.5*mid:
+				grayscale.itemset((i,j,0),255)
+			else: 
+				grayscale.itemset((i,j,0),0)  '''
+			
+			grayscale.itemset((i,j,0),g)
 
 
 	thresh1 = thresh(grayscale)

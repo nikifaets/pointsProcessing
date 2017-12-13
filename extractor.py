@@ -7,9 +7,9 @@ def thresh(img):
 	w = int(width/step)
 	h = int(height/step)
 	#blur = cv2.GaussianBlur(img,(3,3),1)
-	blur = cv2.medianBlur(img, 3)
+	#blur = cv2.medianBlur(img, 3)
 	#ret3,th3 = cv2.threshold(img,120,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-	th1 = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
+	th1 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
             cv2.THRESH_BINARY_INV,3,9)
 	'''th2 = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             cv2.THRESH_BINARY_INV,3,9)'''
