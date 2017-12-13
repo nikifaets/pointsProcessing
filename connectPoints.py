@@ -96,45 +96,56 @@ def makeConnection(point, list):
 	#print("PPOOIINNTT: ", point.x, point.y)
 	for curr in list:
 		point.write(curr,32)
-		'''if curr != closest:
 
-			
-			print("curr: ", curr.x, curr.y)
-			print("dist: ", dist(point,curr))
-			print("angle between curr, point and closest: ", angleBetweenLines(curr, closest, point))
-			if math.fabs(angleBetweenLines(curr,closest,point)) <=30 and not bestf:
-				best = curr
-				bestf = True
+def makeConnectionLines(point, list):
 
-			if math.fabs(math.fabs(angleBetweenLines(curr, closest, point))-90)<=15:
-				second = curr
-				secondf = True
+	diff = 10
+	sortedByX = sorted(list, key = lambda point: point.x, reverse = False)
+	sortedByY = sorted(list, key = lambda point: point.y, reverse = False)
 
-			if math.fabs(angleBetweenLines(curr, second, point)) <=20 and secondf:
-				secondBest = curr
-				break
+	
+def makeConnectionPerpendiculars(point,list):
 
-	 
-	if secondBest == Point(0,0) or second == Point(0,0) or best == Point(0,0):
-		print("kur ")
+	horizontal = False
+	vertical = False
+	minAngle = 20
+	inv = PointNode(0,0)
+	h1 = inv
+	h2 = inv
+	v1 = inv
+	v2 = inv
+	h_diff = 30
+	v_diff = 30
 
-	#point.upcenter = (closest,32)
-	point.write(closest,32)
-	#closest.write(point,32)
-	#point.write(best,32)
-	#best.write(point,32)
-	#closest.downcenter = (point,32)
-	#point.right = (best,32)
-	#best.left = (point,32)
+	for i in list:
+		for j in list:
 
-	#point.write(second,32)
-	#point.write(secondBest, 32)
-	#second.write(point,32)
-	#secondBest.write(point,32)
-	#point.downcenter = (second,32)
-	#second.upcenter = (point,32)
-	#point.left = (secondBest,32)
-	#secondBest.right = (point,32)'''
+			angle = angleBetweenLines(i,j,point)
+			if angle < minAngle and math.fabs(i.x-j.x)<math.fabs(i.y-j.y) and math.fabs(i.x-j.x)<v_diff:
+				if(i.y>j.y):
+					v1 = i
+					v2 = j
+				else:
+					v1 = j
+					v2 = i
+				vertical = 1
+				v_diff = math.fabs(i.x-j.x)
+
+			 
+			if angle < minAngle and math.fabs(i.x-j.x)>math.fabs(i.y-j.y) and math.fabs(i.y-j.y)<h_diff:
+				if(i.y>j.y):
+					h1 = i
+					h2 = j
+				else:
+					h1 = j
+					h2 = i
+				h_diff = math.fabs(i.y-j.y)
+
+	neighs = [h1,h2,v1,v2]
+	for i in neighs:
+		point.write(i,32)
+
+
 
 
 
@@ -145,7 +156,8 @@ def connect(list):
 		sortedNeighbours = findNeighbours(list[i], list)
 		if sortedNeighbours == -1:
 			return -1
-		makeConnection(list[i], sortedNeighbours)
+		#makeConnection(list[i], sortedNeighbours)
+		makeConnectionPerpendiculars(list[i],sortedNeighbours)
 		
 
 
