@@ -6,11 +6,12 @@ def thresh(img):
 	step = 5
 	w = int(width/step)
 	h = int(height/step)
-	blur = cv2.GaussianBlur(img,(7,7),1)
+	blur = cv2.GaussianBlur(img,(13,13),1)
 	#blur = cv2.medianBlur(img, 3)
 	#ret3,th3 = cv2.threshold(img,120,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 	th1 = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,\
-            cv2.THRESH_BINARY_INV,3,3)
+            cv2.THRESH_BINARY_INV,5,5)
+	#th1 = cv2.medianBlur(th1,2)
 	'''th1 = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
             cv2.THRESH_BINARY_INV,5,5'''
 
@@ -20,6 +21,10 @@ def thresh(img):
 	cv2.imshow("blur", blur)'''
 
 	return th1
+
+def threshNormal(img, val):
+
+	return cv2.threshold(img, val, 255, cv2.THRESH_BINARY)[1]
 
 '''folderPath = "laser/"
 img  =cv2.imread(folderPath + "laser34.jpg")

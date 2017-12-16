@@ -45,10 +45,11 @@ def findNeighbours(point, list):
 
 			heapq.heappush(best, (currDist, i))
 		
-	best.sort()			
-	resTemp = best[:8]
+	best.sort()
+	neighs = 5			
+	resTemp = best[:neighs]
 	res = [list[i[1]] for i in resTemp]
-	if(len(res) < 8):
+	if(len(res) < neighs):
 		print("ooopa")
 		return -1
 	'''for i in resTemp:
@@ -152,7 +153,19 @@ def makeConnectionByClosestTwo(point,list):
 	point.write(list[2],32)
 	point.write(list[3],32)
 
+def makeConnectionByMinYdiff(point,list):
 
+	miny = 9999
+	minxDist = 4
+	maxyDist = 15
+	bestn = PointNode(0,0)
+	for neigh in list:
+		dy = math.fabs(neigh.y-point.y)
+		dx = math.fabs(neigh.x-point.x)
+		if dy<miny and neigh.x>point.x and dx>minxDist and dy<maxyDist:
+			miny = dy
+			bestn = neigh
+	return bestn
 
 def connect(list):
 

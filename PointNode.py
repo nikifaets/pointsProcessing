@@ -9,6 +9,9 @@ class PointNode(Point):
 		self.nullpoint = Point(self.x, self.y)
 		invalidDistance = 999;
 
+		self.X = 0
+		self.Y = 0
+		self.Z = 0
 		self.neighbors = list()
 
 		self.upleft = (self.nullpoint,invalidDistance)
@@ -19,6 +22,7 @@ class PointNode(Point):
 		self.downright = (self.nullpoint,invalidDistance)
 		self.downcenter = (self.nullpoint,invalidDistance)
 		self.downleft = (self.nullpoint,invalidDistance)
+
 		'''self.neighbors.append(self.upleft)
 		self.neighbors.append(self.upcenter)
 		self.neighbors.append(self.upright)
@@ -31,7 +35,19 @@ class PointNode(Point):
 
 
 	def write(self, point,dist):
-		self.neighbors.append((point,dist))
+
+		found = False
+		for i in self.neighbors:
+			if i[0] == point:
+				found = True
+				break
+		if not found:
+			self.neighbors.append((point,dist))
+
+	def setCalibratedCoords(self, coords):
+		self.X = coords[0]
+		self.Y = coords[1]
+		self.Z = coords[2]
 
 	def setConnections(self,list):
 		self.upleft = list[0]
@@ -51,6 +67,6 @@ class PointNode(Point):
 		for point in self.neighbors:
 			if(point[0] != self.nullpoint):
 				
-				lines.append(Line(self, point[0], point[1]))
+				lines.append(Line(self, point[0], point[1], 32))
 		
 		return lines
