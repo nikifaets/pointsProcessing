@@ -14,7 +14,7 @@ def getPoints(img, draft, width, height):
 	mem = np.zeros((height, width), np.bool)
 
 	for i in range(0, width):
-		for j in range(0, height):
+		for j in range(0, height):u
 			print("working")
 			#print("kur ", img[j][i]>100, mem[j][i] == False)
 			if(img[j][i] > 100 and not mem[j,i]):
