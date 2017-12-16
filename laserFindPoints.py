@@ -24,6 +24,7 @@ def increase_brightness(img, value):
 
 def threshImage(img):
 
+	print("in threshImages")
 	height,width,channels = img.shape
 			
 	grayscale = np.zeros((height,width, 1), np.uint8)
@@ -44,7 +45,7 @@ def threshImage(img):
 			grayscale.itemset((i,j,0),g)
 	print(grayscale[0][0])
 	print(type(grayscale))
-	grayscale = cv2.add(grayscale, np.array([-200.0]))
+	grayscale = cv2.add(grayscale, np.array([-20.0]))
 	print(grayscale[0][0])
 	print(type(grayscale))
 

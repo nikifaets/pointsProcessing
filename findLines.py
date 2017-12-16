@@ -15,7 +15,7 @@ def getPoints(img, draft, width, height):
 
 	for i in range(0, width):
 		for j in range(0, height):
-
+			print("working")
 			#print("kur ", img[j][i]>100, mem[j][i] == False)
 			if(img[j][i] > 100 and not mem[j,i]):
 				
@@ -136,11 +136,14 @@ def createGrid(img):
 
 
 def test(img):
+	'''cv2.imshow("img", img)
+	cv2.waitKey()'''
 	draft,showLines = createGrid(img)
+	print("sf")
 	cv2.imshow("draft", draft)
 	cv2.imshow("showLines", showLines)
 	cv2.waitKey()
 
 
-'''img = cv2.imread("demo/edged24.jpg",0)
-test(img)'''
+img = cv2.imread("/home/nikifaets/Pictures/Webcam/demo.jpg",0)
+test(img)
