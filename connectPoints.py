@@ -156,7 +156,7 @@ def makeConnectionByClosestTwo(point,list):
 def makeConnectionByMinYdiff(point,list):
 
 	miny = 9999
-	minxDist = 4
+	minxDist = 7
 	maxyDist = 15
 	bestn = PointNode(0,0)
 	for neigh in list:

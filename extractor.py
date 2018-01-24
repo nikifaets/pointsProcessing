@@ -2,10 +2,7 @@ import cv2
 import numpy as np 
 
 def thresh(img):
-	height,width = img.shape
-	step = 5
-	w = int(width/step)
-	h = int(height/step)
+	
 	blur = cv2.GaussianBlur(img,(13,13),1)
 	#blur = cv2.medianBlur(img, 3)
 	#ret3,th3 = cv2.threshold(img,120,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
@@ -13,7 +10,7 @@ def thresh(img):
             cv2.THRESH_BINARY_INV,5,5)
 	#th1 = cv2.medianBlur(th1,2)
 	'''th1 = cv2.adaptiveThreshold(blur,255,cv2.ADAPTIVE_THRESH_MEAN_C,\
-            cv2.THRESH_BINARY_INV,5,5'''
+            cv2.THRESH_BINARY_INV,5,5)'''
 
 	'''cv2.imshow("th1", th1)
 	cv2.imshow("th2", th2)

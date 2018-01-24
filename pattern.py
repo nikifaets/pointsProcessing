@@ -31,6 +31,7 @@ class Pattern:
 		self.currPoints = list()
 		self.readCoordinates(coords)
 
+
 	def getMatrix(self):
 		return self.matrix
 
@@ -50,18 +51,17 @@ class Pattern:
 			x = int(x)
 			y = int(y)
 			p = PointNode(x,y)
+
 			p.setCalibratedCoords((X,Y,Z))
 			self.savedPoints.append(p)
-			self.points2d.append(PointNode(x,y))
-			self.points3d.append((X,Y,Z))
+			self.points2d.append(p)
+			self.points3d.append(p)
 
-		print(len(self.savedPoints))
 		lines = self.findRows(points=self.savedPoints)
 
 		self.matrix = self.linesToMatrix(lines)
-		for i in self.matrix:
-			for j in i:
-				print(j.X, j.Y, j.Z)
+	
+				
 		#print("neghthhhh",len(self.matrix))
 
 	def linesToMatrix(self, lines):
@@ -160,13 +160,12 @@ class Pattern:
 		for i in range(0, len(currMatrix)):
 			for p in range(0, len(currMatrix[i])):
 
-				print(i,p)
-				print(self.matrix[i][p])
+			
 				saved_point = self.matrix[i][p]
 				X0 = saved_point.X
 				Y0 = saved_point.Y
 				Z0 = saved_point.Z
-				print(X0, Y0, Z0)
+				
 				#print(type(X0))
 				X = X0*(self.d/(X0+self.L*self.kx))
 				Y = Y0*(self.d/(X0+self.L*self.kx))
@@ -174,6 +173,60 @@ class Pattern:
 				coords.append((X,Y,Z))
 
 		self.writeVertices("surface.obj", coords)
+
+	def getDepth(self,pointsList):
+
+		coords = list()
+		readp = open("pars.txt","r")
+		L = float(readp.readline())
+		d = float(readp.readline())
+		kx = float(readp.readline())
+		ky = float(readp.readline())
+		prop = float(readp.readline())
+		readp.close()
+
+		if len(pointsList) == len(self.points2d):
+
+			sortedCal = sorted(self.points2d, key = lambda point: point.y, reverse = True)
+			sortedNew = sorted(pointsList, key = lambda point: point.y, reverse = False)
+
+			for i in range(0, len(pointsList)):
+
+				
+				calP = sortedCal[i]
+				newP = sortedNew[i]
+
+				newP.x = 160-newP.x
+				newP.y = 120-newP.y
+
+				print("COMPARE", calP.x, calP.y, newP.x, newP.y)
+				kx = prop*newP.x
+				ky  = prop*newP.y
+
+
+				X0 = calP.X
+				Y0 = calP.Y
+				Z0 = calP.Z
+				#print(X0, Y0, Z0)
+				#print(type(X0))
+				X = X0*(d/(X0+L*kx))
+				Y = Y0*(d/(X0+L*kx))
+				Z = L*(d/(X0+L*kx))
+				Z1 = d/(d-L*prop*(calP.x - newP.x))
+				
+
+				newP.setCalibratedCoords((X, Y, Z))
+				coords.append((X,Y,Z))
+
+		self.writeVertices("3D.obj", coords)
+
+		for i in self.points2d:
+			print(i.X, i.Y, i.Z)
+
+		print("----------------------------------------------------")
+
+		for i in pointsList:
+			print(i.X, i.Y, i.Z)
 
 	def writeVertices(self, file, coords):
 
