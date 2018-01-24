@@ -7,7 +7,7 @@ import transformToPoints as tr
 from calibration import calibrator
 import pattern as pt
 
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 cap.set(3,240)
 cap.set(4,320)
 projecting = False
@@ -23,37 +23,36 @@ while(True):
 	if projecting:
 	
 		thresh, grayscale = cpt.threshImage(img)
-		points, pointsList = fl.createGrid(thresh)
-		lines, currMatrix = tr.transform(pointsList, points, pat)
+		#points, pointsList = fl.createGrid(thresh)
+		#lines, currMatrix = tr.transform(pointsList, points, pat)
 		#points = fl.createGrid(thresh)
 		cv2.imshow("img", img)
 		cv2.imshow("thresh", thresh)
-		cv2.imshow("grayscale", grayscale)
+		#cv2.imshow("grayscale", grayscale)
 
-		cv2.imshow("points", points)
+		#cv2.imshow("points", points)
 		#cv2.imshow("connected", connectedPoints)
-		cv2.imshow("lines", lines)
+		#cv2.imshow("lines", lines)
 
 		k = cv2.waitKey(1)
 		if k == s:
+
+			points, pointsList = fl.createGrid(thresh)
 			cl = calibrator()
 			cl.calibrate(pointsList)
 			pat = pt.Pattern()
 			cv2.imwrite("calibrated.jpg", points)
 
 		if k == c:
-			pat.compareWithPattern(currMatrix)
 
-		if k == b:
-			dir = "/home/nikifaets/Documents/poster/"
-			#cv2.imwrite(dir+"original.jpg", img)
-			#cv2.imwrite(dir+"grayscale1.jpg", grayscale)
-			cv2.imwrite(dir+"adaptivethresh.jpg", thresh)
-			#cv2.imwrite(dir+"points.jpg", points)
-			#cv2.imwrite(dir+"lines.jpg", lines)
-			break
+			print("got C")
+			points, pointsList = fl.createGrid(thresh)
+			pat.getDepth(pointsList)
+			cv2.imwrite("newGrid.jpg", points)
+
 	k = cv2.waitKey(1)
 	if k == a:
+		print("got A")
 		projecting = not projecting
 
 	if k == q:

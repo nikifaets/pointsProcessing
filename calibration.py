@@ -5,9 +5,9 @@ from PointNode import PointNode
 import csv
 
 class calibrator:
-	d = 18
-	L = 39.5
-	prop = 0.00109
+	d = 21.5
+	L = 50
+	prop = 0.00218
 	kx = 0
 	ky = 0
 
@@ -15,8 +15,18 @@ class calibrator:
 
 		coords = list()
 		for point in points:
+
+			
+
+			#rotate the coordinate system (because it's the rotated on the camera's matrix)
+			point.x = 160-point.x
+			point.y = 120-point.y
+
 			x = point.x
 			y = point.y
+
+
+			
 
 			self.kx = (x*self.prop)
 			self.ky = (y*self.prop)
@@ -24,9 +34,15 @@ class calibrator:
 			Y = -self.L*self.ky
 			Z = self.L
 
+			
+
+			point.setCalibratedCoords((X,Y,Z))
+
 			coords.append((point,(X,Y,Z)))
 		self.writeVertices("vertices.obj","pars.txt", coords)
 		self.writeCoordinates("coordinates.csv", coords)
+		print("CALIBRATED")
+
 
 	def writeVertices(self, vertices, parameters, points):
 
@@ -38,7 +54,7 @@ class calibrator:
 
 		f1 = open(parameters, "w+")
 		#1.L/ 2.d/ 3.kx/ 4.ky
-		pars = str(self.L) + "\n" + str(self.d) + "\n" + str(self.kx) + "\n" + str(self.ky) + "\n"
+		pars = str(self.L) + "\n" + str(self.d) + "\n" + str(self.kx) + "\n" + str(self.ky) + "\n" + str(self.prop)+"\n"
 		f1.write(pars)
 		f1.close()
 

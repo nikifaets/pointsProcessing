@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
-from extractor import thresh,threshNormal
+from extractor import thresh
+from extractor import threshNormal
 
 # this algorithm extracts the points from the picture - outputs a new picture where only the points are to be seen
 
@@ -24,11 +25,11 @@ def increase_brightness(img, value):
 
 def threshImage(img):
 
-	print("in threshImages")
+	
 	height,width,channels = img.shape
 			
-	grayscale = np.zeros((height,width), np.uint8)
-	#print(grayscale[0][0], grayscale[0][1])
+	grayscale = np.zeros((height,width, 1), np.uint8)
+
 	#edged = np.zeros((height,width, 3), np.uint8)
 	#np.copyto(grayscale, img)
 	#np.copyto(edged, img)
@@ -42,24 +43,14 @@ def threshImage(img):
 			else: 
 				grayscale.itemset((i,j,0),0) '''
 	
-<<<<<<< HEAD
-			grayscale.itemset((i,j,0),g)
-	print(grayscale[0][0])
-	print(type(grayscale))
-	grayscale = cv2.add(grayscale, np.array([-20.0]))
-	print(grayscale[0][0])
-	print(type(grayscale))
-=======
-			grayscale.itemset((i,j),g)
+			grayscale.itemset((i,j,0),(int(g)+int(b)+int(r))/3)
+	
+	grayscale = cv2.add(grayscale, np.array([-220.0]))
 	#print(grayscale[0][0])
-	#print(type(grayscale))
-	grayscale = cv2.add(grayscale, np.array([.0]))
-	#print(grayscale[0][0])
-	#print(type(grayscale))
->>>>>>> 368cd359e6caa6c660371930d4c6a6daade392e9
 
-	#thresh1 = threshNormal(grayscale, 50)
-	thresh1 = thresh(grayscale)
+
+	#thresh1 = thresh(grayscale)
+	thresh1 = threshNormal(grayscale, 10)	
 	#canny = cv2.Canny(thresh1, 150,250)
 		
 		#cv2.imshow("edge"+str(im), edged)

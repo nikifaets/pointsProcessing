@@ -1,3 +1,4 @@
+
 import cv2
 import numpy as np 
 import math
@@ -5,7 +6,7 @@ from connectPoints import connect
 from connectPoints import sort
 from Point import Point
 from PointNode import PointNode
-import heapq
+import queue
 
 def getPoints(img, draft, width, height):
 
@@ -14,23 +15,23 @@ def getPoints(img, draft, width, height):
 	mem = np.zeros((height, width), np.bool)
 
 	for i in range(0, width):
-		for j in range(0, height):u
-			print("working")
+		for j in range(0, height):
+
 			#print("kur ", img[j][i]>100, mem[j][i] == False)
 			if(img[j][i] > 100 and not mem[j,i]):
 				
-				maxw = (0,0)
-				minw = (9999,9999)
-				maxh = (0,0)
-				minh = (9999,9999)
+				maxw = (i,j)
+				minw = (i,j)
+				maxh = (i,j)
+				minh = (i,j)
 				#search white in the neighbours in a sideXside rectangle
-				heap = []
-				heapq.heappush(heap,(i,j))
-				
-				while len(heap) > 0:
-					curr = heapq.heappop(heap)
+				heap = queue.Queue()
+				heap.put((i,j))
+				length = 1
+				while heap.qsize() > 0:
+					curr = heap.get()
 					#print("POINT ", curr[1],curr[0], img[j][i])
-					side = 3
+					side = 4
 					for h in range(curr[1]-side, curr[1]+side):
 						for w in range(curr[0]-side, curr[0]+side):
 							if not (h==j and w==i):
@@ -48,7 +49,8 @@ def getPoints(img, draft, width, height):
 								if(mem[h][w] == False):
 									mem[h][w] = True
 									if img[h][w] > 100:
-										heapq.heappush(heap,(w,h))
+										heap.put((w,h))
+										length+=1
 										#print("pushed", h, w)
 										if h > maxh[1]:
 											maxh = (w,h)
@@ -61,14 +63,17 @@ def getPoints(img, draft, width, height):
 
 				midh = int((maxh[1] + minh[1])/2)
 				midw = int((maxw[0] + minw[0])/2)
+				print(length, midh, midw)
 
-				if not (maxh[0] == 0 or minh[0] == 9999 or minw[0] == 9999 or maxw[0] == 0):
+				minSize = 1
+				if (maxh[0] != 0 and minh[0] != 9999 and minw[0] != 9999 and maxw[0] != 0) and length>=minSize:
 					
 					'''draft[maxh[1],maxh[0]]=200
 					draft[minh[1],minh[0]]=200
 					draft[maxw[1],maxw[0]]=200
 					draft[minw[1],minw[0]]=200'''
-					pointsList.append(PointNode(midh,midw))
+					print("writing")
+					pointsList.append(PointNode(midw,midh))
 					draft[midh][midw] = 255
 									
 
@@ -122,28 +127,24 @@ def createGrid(img):
 
 	pointsList,draft = getPoints(img, draft, width, height)
 
-	ret = connect(pointsList)
+	'''ret = connect(pointsList)
 	if ret == -1:
-		return (draft, draft)
-
+		return (draft, draft,[PointNode(0,0)])
 	lines = list()
 	lines = collectLines(pointsList)
+	showLines = drawLines(lines, width, height)'''
 
-	showLines = drawLines(lines, width, height)
+	#return (draft, showLines, pointsList)
 
-	return (draft, showLines)
-	#return draft
+	return draft,pointsList
 
 
 def test(img):
-	'''cv2.imshow("img", img)
-	cv2.waitKey()'''
 	draft,showLines = createGrid(img)
-	print("sf")
 	cv2.imshow("draft", draft)
 	cv2.imshow("showLines", showLines)
 	cv2.waitKey()
 
 
-img = cv2.imread("/home/nikifaets/Pictures/Webcam/demo.jpg",0)
-test(img)
+'''img = cv2.imread("demo/edged24.jpg",0)
+test(img)'''
