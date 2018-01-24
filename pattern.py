@@ -160,13 +160,13 @@ class Pattern:
 		for i in range(0, len(currMatrix)):
 			for p in range(0, len(currMatrix[i])):
 
-				print(i,p)
-				print(self.matrix[i][p])
+				#print(i,p)
+				#print(self.matrix[i][p])
 				saved_point = self.matrix[i][p]
 				X0 = saved_point.X
 				Y0 = saved_point.Y
 				Z0 = saved_point.Z
-				print(X0, Y0, Z0)
+				#print(X0, Y0, Z0)
 				#print(type(X0))
 				X = X0*(self.d/(X0+self.L*self.kx))
 				Y = Y0*(self.d/(X0+self.L*self.kx))
