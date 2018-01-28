@@ -3,6 +3,7 @@ import numpy as np
 from extractor import thresh
 from extractor import threshNormal
 
+
 # this algorithm extracts the points from the picture - outputs a new picture where only the points are to be seen
 
 
@@ -43,14 +44,15 @@ def threshImage(img):
 			else: 
 				grayscale.itemset((i,j,0),0) '''
 	
+			#grayscale.itemset((i,j,0),int(g))
 			grayscale.itemset((i,j,0),(int(g)+int(b)+int(r))/3)
 	
-	grayscale = cv2.add(grayscale, np.array([-220.0]))
+	grayscale = cv2.add(grayscale, np.array([-180.0]))
 	#print(grayscale[0][0])
 
 
-	#thresh1 = thresh(grayscale)
-	thresh1 = threshNormal(grayscale, 10)	
+	thresh1 = thresh(grayscale)
+	#thresh1 = threshNormal(grayscale, 20)	
 	#canny = cv2.Canny(thresh1, 150,250)
 		
 		#cv2.imshow("edge"+str(im), edged)

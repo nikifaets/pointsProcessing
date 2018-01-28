@@ -1,4 +1,3 @@
-
 import cv2
 import numpy as np 
 import math
@@ -7,12 +6,14 @@ from connectPoints import sort
 from Point import Point
 from PointNode import PointNode
 import queue
+import time
 
-def getPoints(img, draft, width, height):
+def getPoints(img,  width, height):
 
-	
+	millis = int(round(time.time() * 1000))
 	pointsList = list()
-	mem = np.zeros((height, width), np.bool)
+	mem = np.zeros((height, width,1), np.bool)
+	draft = np.zeros((height, width,1), np.uint8)
 
 	for i in range(0, width):
 		for j in range(0, height):
@@ -47,7 +48,9 @@ def getPoints(img, draft, width, height):
 								
 								#print(h,w)
 								if(mem[h][w] == False):
-									mem[h][w] = True
+									mem.itemset((h,w,0),True)
+									mem.itemset((j,i,0), True)
+					
 									if img[h][w] > 100:
 										heap.put((w,h))
 										length+=1
@@ -63,7 +66,7 @@ def getPoints(img, draft, width, height):
 
 				midh = int((maxh[1] + minh[1])/2)
 				midw = int((maxw[0] + minw[0])/2)
-				print(length, midh, midw)
+				
 
 				minSize = 1
 				if (maxh[0] != 0 and minh[0] != 9999 and minw[0] != 9999 and maxw[0] != 0) and length>=minSize:
@@ -72,12 +75,16 @@ def getPoints(img, draft, width, height):
 					draft[minh[1],minh[0]]=200
 					draft[maxw[1],maxw[0]]=200
 					draft[minw[1],minw[0]]=200'''
-					print("writing")
+				
 					pointsList.append(PointNode(midw,midh))
-					draft[midh][midw] = 255
+					draft.itemset((midh,midw,0), 255)
 									
 
+	millisnew = int(round(time.time() * 1000))
+	#print(millisnew-millis)
 	return (pointsList,draft)
+	#return pointsList
+	
 # the main file for the moment - the connected lines are processed here
 #img = cv2.imread("demo/edged6.jpg", 0)
 #img = cv2.imread("laser/demo.jpg", 0)
