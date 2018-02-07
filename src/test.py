@@ -47,7 +47,7 @@ def getDepth(pointsList, pointsList1):
 			newP.setCalibratedCoords((X, Y, Z))
 			coords.append((X,Y,Z))
 
-	writeVertices("test/3D_1.obj", coords)
+	writeVertices("3D_1.obj", coords)
 
 def writeVertices( file, coords):
 
@@ -57,8 +57,8 @@ def writeVertices( file, coords):
 			vert = "v "+str(x) + " " + str(y) + " " + str(z) + "\n"
 			f.write(vert)
 
-calPath = "calibrated.jpg"
-newPath = "newGrid.jpg"
+calPath = "test/testCal4.jpg"
+newPath = "test/testNew4.jpg"
 
 '''cap = cv2.VideoCapture(1)
 cap.set(3,240)

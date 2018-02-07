@@ -47,12 +47,13 @@ def threshImage(img):
 			#grayscale.itemset((i,j,0),int(g))
 			grayscale.itemset((i,j,0),(int(g)+int(b)+int(r))/3)
 	
-	grayscale = cv2.add(grayscale, np.array([-180.0]))
+	#grayscale = cv2.add(grayscale, np.array([-180.0]))
 	#print(grayscale[0][0])
 
 
-	thresh1 = thresh(grayscale)
-	#thresh1 = threshNormal(grayscale, 20)	
+	#thresh1 = thresh(grayscale)
+	#thresh1 = grayscale
+	thresh1 = threshNormal(grayscale, 20)	
 	#canny = cv2.Canny(thresh1, 150,250)
 		
 		#cv2.imshow("edge"+str(im), edged)

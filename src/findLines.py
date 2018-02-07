@@ -32,7 +32,7 @@ def getPoints(img,  width, height):
 				while heap.qsize() > 0:
 					curr = heap.get()
 					#print("POINT ", curr[1],curr[0], img[j][i])
-					side = 4
+					side = 2
 					for h in range(curr[1]-side, curr[1]+side):
 						for w in range(curr[0]-side, curr[0]+side):
 							if not (h==j and w==i):
@@ -132,7 +132,7 @@ def createGrid(img):
 	nodesList = list()
 	draft = np.zeros((height,width), np.uint8)
 
-	pointsList,draft = getPoints(img, draft, width, height)
+	pointsList,draft = getPoints(img, width, height)
 
 	'''ret = connect(pointsList)
 	if ret == -1:
