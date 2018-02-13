@@ -23,14 +23,14 @@ while(True):
 	if projecting:
 	
 		thresh, grayscale = cpt.threshImage(img)
-		#points, pointsList = fl.createGrid(thresh)
+		points, pointsList = fl.createGrid(thresh)
 		#lines, currMatrix = tr.transform(pointsList, points, pat)
 		#points = fl.createGrid(thresh)
 		cv2.imshow("img", img)
 		cv2.imshow("thresh", thresh)
 		#cv2.imshow("grayscale", grayscale)
 
-		#cv2.imshow("points", points)
+		cv2.imshow("points", points)
 		#cv2.imshow("connected", connectedPoints)
 		#cv2.imshow("lines", lines)
 

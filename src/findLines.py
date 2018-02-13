@@ -10,77 +10,28 @@ import time
 
 def getPoints(img,  width, height):
 
-	millis = int(round(time.time() * 1000))
+
 	pointsList = list()
-	mem = np.zeros((height, width,1), np.bool)
 	draft = np.zeros((height, width,1), np.uint8)
 
-	for i in range(0, width):
-		for j in range(0, height):
+	connectivity = 8
+	output = cv2.connectedComponentsWithStats(img, connectivity, cv2.CV_16U)
+	num_labels = output[0]
+	centroids = output[3]
+	#print("labels ", num_labels)
 
-			#print("kur ", img[j][i]>100, mem[j][i] == False)
-			if(img[j][i] > 100 and not mem[j,i]):
-				
-				maxw = (i,j)
-				minw = (i,j)
-				maxh = (i,j)
-				minh = (i,j)
-				#search white in the neighbours in a sideXside rectangle
-				heap = queue.Queue()
-				heap.put((i,j))
-				length = 1
-				while heap.qsize() > 0:
-					curr = heap.get()
-					#print("POINT ", curr[1],curr[0], img[j][i])
-					side = 2
-					for h in range(curr[1]-side, curr[1]+side):
-						for w in range(curr[0]-side, curr[0]+side):
-							if not (h==j and w==i):
-								#print(h,w)
-								if w >= width:
-									w = width-1
-								if w<0:
-									w = 0
-								if h >= height:
-									h = height-1
-								if h<0:
-									h = 0
-								
-								#print(h,w)
-								if(mem[h][w] == False):
-									mem.itemset((h,w,0),True)
-									mem.itemset((j,i,0), True)
-					
-									if img[h][w] > 100:
-										heap.put((w,h))
-										length+=1
-										#print("pushed", h, w)
-										if h > maxh[1]:
-											maxh = (w,h)
-										if h < minh[1]:
-											minh = (w,h)
-										if w > maxw[0]:
-											maxw = (w,h)
-										if w < minw[0]:
-											minw = (w,h)
+	
 
-				midh = int((maxh[1] + minh[1])/2)
-				midw = int((maxw[0] + minw[0])/2)
-				
+	for p in range(1, len(centroids)):
 
-				minSize = 1
-				if (maxh[0] != 0 and minh[0] != 9999 and minw[0] != 9999 and maxw[0] != 0) and length>=minSize:
-					
-					'''draft[maxh[1],maxh[0]]=200
-					draft[minh[1],minh[0]]=200
-					draft[maxw[1],maxw[0]]=200
-					draft[minw[1],minw[0]]=200'''
-				
-					pointsList.append(PointNode(midw,midh))
-					draft.itemset((midh,midw,0), 255)
+		if p>0:
+
+			i = centroids[p]
+			draft.itemset((np.int(i[1]), np.int(i[0]), 0), 255)
+			pointsList.append(PointNode(i[0], i[1]))
 									
 
-	millisnew = int(round(time.time() * 1000))
+	
 	#print(millisnew-millis)
 	return (pointsList,draft)
 	#return pointsList

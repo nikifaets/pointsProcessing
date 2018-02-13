@@ -3,11 +3,13 @@ import numpy as np
 import laserFindPoints as cpt
 import findLines as fl
 from calibration import calibrator
+from PointNode import PointNode
 
 
-def getDepth(pointsList, pointsList1):
+def getDepth(pointsList_c, pointsList_n):
 
 	coords = list()
+	pairs = list()
 	readp = open("pars.txt","r")
 	L = float(readp.readline())
 	d = float(readp.readline())
@@ -16,38 +18,103 @@ def getDepth(pointsList, pointsList1):
 	prop = float(readp.readline())
 	readp.close()
 
-	print("lengths ", len(pointsList), len(pointsList1))
-	if len(pointsList) == len(pointsList1):
+	print("lengths ", len(pointsList_c), len(pointsList_n))
+	if len(pointsList_n) == len(pointsList_c):
 
-		for i in range(len(pointsList)):
+		
+		pairs = getPairs(pointsList_c, pointsList_n, 0)
+		
 
-			
-			calP = pointsList[i]
-			newP = pointsList1[i]
+	else:
 
-			kx = prop*newP.x
-			ky  = prop*newP.y
+		pairs = getPairs(pointsList_c, pointsList_n,1)
 
-			print("CALCULATING DEPTH FOR CAL POINT ", calP.x, calP.y, "AND NEW POINT ", newP.x, newP.y)
-			print("L = ", L, "kx = ", kx, "d = ",d)
+	for i in pairs:
 
 			
+		calP = i[0]
+		newP = i[1]
 
-			X0 = calP.X
-			Y0 = calP.Y
-			Z0 = calP.Z
-			#print(X0, Y0, Z0)
-			#print(type(X0))
-			X = X0*(d/(X0+L*kx))
-			Y = Y0*(d/(X0+L*kx))
-			Z = L*(d/(X0+L*kx))
-			Z1 = d/(d-L*prop*(calP.x - newP.x))
-			
+		kx = prop*newP.x
+		ky  = prop*newP.y
 
-			newP.setCalibratedCoords((X, Y, Z))
-			coords.append((X,Y,Z))
+		print("CALCULATING DEPTH FOR CAL POINT ", calP.x, calP.y, "AND NEW POINT ", newP.x, newP.y)
+		print("L = ", L, "kx = ", kx, "d = ",d)
+
+		
+
+		X0 = calP.X
+		Y0 = calP.Y
+		Z0 = calP.Z
+		#print(X0, Y0, Z0)
+		#print(type(X0))
+		X = X0*(d/(X0+L*kx))
+		Y = Y0*(d/(X0+L*kx))
+		Z = L*(d/(X0+L*kx))
+		Z1 = d/(d-L*prop*(calP.x - newP.x))
+		
+
+		newP.setCalibratedCoords((X, Y, Z))
+		coords.append((X,Y,Z))
 
 	writeVertices("3D_1.obj", coords)
+
+
+
+
+def getPairs(pointsList_c, pointsList_n, diff):
+
+	#0 for the same length of lists
+	if diff == 0:
+		pairs = list()
+
+		for i in range(0, len(pointsList_c)):
+
+			pairs.append((pointsList_c[i], pointsList_n[i]))
+
+		return pairs
+
+	else:
+
+		#find points from each image with the same y coordinate
+		pairs = list()
+		
+		for i in range(0, len(pointsList_c)):
+
+			local_c = list()
+			local_n = list()
+
+			p = pointsList_c[i]
+			y = p.y
+			local_c.append(p)
+
+			if i < len(pointsList_c)-1:
+				while(pointsList_c[i+1].y == y):
+
+					i+=1
+					local_c.append(pointsList_c[i])
+
+				for j in range(0, len(pointsList_n)):
+
+					p_n = pointsList_n[j]
+					if p_n.y == y:
+						local_n.append(p_n)
+
+			#------------ compare the collected points with the same y coordinate
+
+			if len(local_c) == len(local_n):
+
+				for pair in range(0, len(local_c)):
+
+					pairs.append((local_c[pair], local_n[pair]))
+
+		return pairs
+
+
+
+
+
+
 
 def writeVertices( file, coords):
 
@@ -57,50 +124,46 @@ def writeVertices( file, coords):
 			vert = "v "+str(x) + " " + str(y) + " " + str(z) + "\n"
 			f.write(vert)
 
-calPath = "test/testCal4.jpg"
-newPath = "test/testNew4.jpg"
+calPath = "calibrated.jpg"
+newPath = "newGrid.jpg"
 
-'''cap = cv2.VideoCapture(1)
-cap.set(3,240)
-cap.set(4,320)
 
-a = 97
-b = 98
-c = 99
-d = 100
-while(True):
+cal = cv2.imread(calPath, 0)
+new = cv2.imread(newPath,0)
 
-	ret, img = cap.read()
-	cv2.imshow("img", img)
 
-	k = cv2.waitKey(1)
+h_c, w_c = cal.shape
 
-	if k == a:
-		cv2.imwrite(calPath, img)
+points_c = np.zeros((h_c, w_c, 1), np.uint8)
+points_n = np.zeros((h_c, w_c, 1), np.uint8)
+pointsList_c = list()
+pointsList_n = list()
 
-	if k == b:
-		cv2.imwrite(newPath, img)
+counter = 0
+for h in range(0, h_c):
+	for w in range(0, w_c):
+		if cal[h][w] > 100:
+			pointsList_c.append(PointNode(w,h))
+			points_c[h][w] = 255
+			counter+=1
 
-	if k == d:
-		break'''
-		
+		if new[h][w] > 100:
+			pointsList_n.append(PointNode(w,h))
+			points_n[h][w] = 255
 
-cal = cv2.imread(calPath, 1)
-new = cv2.imread(newPath,1)
-thresh, grayscale = cpt.threshImage(cal)
-points, pointsList = fl.createGrid(thresh)
-thresh1, grayscale1 = cpt.threshImage(new)
-points1, pointsList1 = fl.createGrid(thresh1)
 
-cv2.imshow("thresh", thresh)
-cv2.imshow("grayscale", grayscale)
-cv2.imshow("points", points)
-cv2.imshow("newthresh", thresh1)
-cv2.imshow("grayscalenew", grayscale1)
-cv2.imshow("newpoints", points1)
+#cv2.imshow("thresh", thresh)
+#cv2.imshow("grayscale", grayscale)
 
-sortedCal = sorted(pointsList, key = lambda point: point.y, reverse = False)
-sortedNew = sorted(pointsList1, key = lambda point: point.y, reverse = False)
+cv2.imshow("points", points_c)
+cv2.imshow("cal", cal)
+#cv2.imshow("newthresh", thresh1)
+#cv2.imshow("grayscalenew", grayscale1)
+cv2.imshow("new", new)
+cv2.imshow("newpoints", points_n)
+
+sortedCal = sorted(pointsList_c, key = lambda point: point.y, reverse = False)
+sortedNew = sorted(pointsList_n, key = lambda point: point.y, reverse = False)
 
 longer = max(len(sortedNew), len(sortedCal))
 
@@ -123,14 +186,15 @@ print(len(sortedCal), len(sortedNew))
 cal = calibrator()
 print(type(cal))
 cal.calibrate(sortedCal)
-getDepth(pointsList, pointsList1)
+getDepth(pointsList_c, pointsList_n)
 
-for i in pointsList:
+for i in pointsList_c:
 	print(i.X, i.Y, i.Z)
 
 print("----------------------------------------------------")
 
-for i in pointsList1:
+for i in pointsList_n:
 	print(i.X, i.Y, i.Z)
 
+print(counter)
 cv2.waitKey()
