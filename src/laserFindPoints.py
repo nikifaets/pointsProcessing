@@ -47,7 +47,7 @@ def threshImage(img):
 			#grayscale.itemset((i,j,0),int(g))
 			grayscale.itemset((i,j,0),(int(g)+int(b)+int(r))/3)
 	
-	grayscale = cv2.add(grayscale, np.array([-230.0]))
+	grayscale = cv2.add(grayscale, np.array([-190.0]))
 	#print(grayscale[0][0])
 
 
@@ -55,7 +55,7 @@ def threshImage(img):
 	#thresh1 = grayscale
 	thresh1 = threshNormal(grayscale, 20)
 
-	kernel = np.ones((2,2), np.uint8)
+	kernel = np.ones((1,1), np.uint8)
 	thresh1 = cv2.erode(thresh1, kernel, 1)	
 	#canny = cv2.Canny(thresh1, 150,250)
 		
