@@ -13,6 +13,7 @@ def getPoints(img,  width, height):
 
 	pointsList = list()
 	draft = np.zeros((height, width,1), np.uint8)
+	ret,img = cv2.threshold(img, 100,255, cv2.THRESH_BINARY)
 
 	connectivity = 8
 	output = cv2.connectedComponentsWithStats(img, connectivity, cv2.CV_16U)
