@@ -21,13 +21,16 @@ def getDepth(pointsList_c, pointsList_n):
 	print("lengths ", len(pointsList_c), len(pointsList_n))
 	if len(pointsList_n) == len(pointsList_c):
 
-		
+		print("!!!!!!!!!!!1",0)
 		pairs = getPairs(pointsList_c, pointsList_n, 0)
+		
 		
 
 	else:
 
+		print("!!!!!!!!!!!!!!!11,1",1)
 		pairs = getPairs(pointsList_c, pointsList_n,1)
+		
 
 	for i in pairs:
 
@@ -124,15 +127,20 @@ def writeVertices( file, coords):
 			vert = "v "+str(x) + " " + str(y) + " " + str(z) + "\n"
 			f.write(vert)
 
-calPath = "calibrated.jpg"
-newPath = "newGrid.jpg"
+calPath = "test/testCal5.jpg"
+newPath = "test/testNew5.jpg"
 
 
 cal = cv2.imread(calPath, 0)
 new = cv2.imread(newPath,0)
 
-
 h_c, w_c = cal.shape
+h_n, w_n = new.shape
+
+pointsList_n, new = fl.getPoints(new, w_n, h_n)
+pointsList_c, cal = fl.getPoints(cal, w_c, h_c)
+cv2.imshow("new_p", new)
+cv2.imshow("cal_p", cal)
 
 points_c = np.zeros((h_c, w_c, 1), np.uint8)
 points_n = np.zeros((h_c, w_c, 1), np.uint8)
@@ -161,6 +169,7 @@ cv2.imshow("cal", cal)
 #cv2.imshow("grayscalenew", grayscale1)
 cv2.imshow("new", new)
 cv2.imshow("newpoints", points_n)
+cv2.waitKey()
 
 sortedCal = sorted(pointsList_c, key = lambda point: point.y, reverse = False)
 sortedNew = sorted(pointsList_n, key = lambda point: point.y, reverse = False)
