@@ -138,6 +138,8 @@ newPath = "test/testNew" + str(num) + ".jpg"
 cal = cv2.imread(calPath, 0)
 new = cv2.imread(newPath,0)
 
+ret,cal = cv2.threshold(cal, 100,255, cv2.THRESH_BINARY)
+ret,new = cv2.threshold(new, 100,255, cv2.THRESH_BINARY)
 h_c, w_c = cal.shape
 h_n, w_n = new.shape
 
