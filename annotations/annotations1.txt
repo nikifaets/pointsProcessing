@@ -1,0 +1,1 @@
+/home/nikifaets/code/pointsProcessing/edit/scaled/1.jpg 2 230 170 18 21 230 170 18 21

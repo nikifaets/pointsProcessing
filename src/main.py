@@ -7,7 +7,7 @@ import transformToPoints as tr
 from calibration import calibrator
 import pattern as pt
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3,240)
 cap.set(4,320)
 projecting = False
@@ -17,18 +17,40 @@ q = 113
 c = 99
 b = 98
 pat = pt.Pattern()
+track = False
+tracker = cv2.TrackerMedianFlow_create()
 while(True):
+
 	ret, img = cap.read()
 	cv2.imshow("img", img)
 	if projecting:
-	
+		
+		img = cv2.GaussianBlur(img, (5,5), 3)
+		img = cv2.morphologyEx(img, cv2.MORPH_OPEN, (4,4))
 		thresh, grayscale = cpt.threshImage(img)
-		points, pointsList = fl.createGrid(thresh)
+		points, pointsList, stats = fl.createGrid(thresh)
+
+		if track and type(stats) != type(1):
+
+			print("kurbeforeupdate")
+			ret, sqr = tracker.update(img)
+			print("chup")
+			p1 = (int(sqr[0]), int(sqr[1]))
+			p2 = (int(sqr[0] + sqr[2]), int(sqr[1] + sqr[3]))
+			cv2.rectangle(points, p1, p2, 255, 2, 1)
+			print("kurupdate")
+
+		if not track and type(stats) != type(1):
+			tracker.init(img, (stats[0], stats[1], stats[2], stats[3]))
+			track = True
+			print("kur!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+
 		#lines, currMatrix = tr.transform(pointsList, points, pat)
 		#points = fl.createGrid(thresh)
 		cv2.imshow("img", img)
 		cv2.imshow("thresh", thresh)
-		#cv2.imshow("grayscale", grayscale)
+		cv2.imshow("grayscale", grayscale)
 
 		cv2.imshow("points", points)
 		#cv2.imshow("connected", connectedPoints)
