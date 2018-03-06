@@ -4,6 +4,7 @@ import laserFindPoints as cpt
 import findLines as fl
 from calibration import calibrator
 from PointNode import PointNode
+import sys
 
 
 def getDepth(pointsList_c, pointsList_n):
@@ -18,17 +19,14 @@ def getDepth(pointsList_c, pointsList_n):
 	prop = float(readp.readline())
 	readp.close()
 
-	print("lengths ", len(pointsList_c), len(pointsList_n))
 	if len(pointsList_n) == len(pointsList_c):
 
-		print("!!!!!!!!!!!1",0)
 		pairs = getPairs(pointsList_c, pointsList_n, 0)
 		
 		
 
 	else:
 
-		print("!!!!!!!!!!!!!!!11,1",1)
 		pairs = getPairs(pointsList_c, pointsList_n,1)
 		
 
@@ -40,9 +38,6 @@ def getDepth(pointsList_c, pointsList_n):
 
 		kx = prop*newP.x
 		ky  = prop*newP.y
-
-		print("CALCULATING DEPTH FOR CAL POINT ", calP.x, calP.y, "AND NEW POINT ", newP.x, newP.y)
-		print("L = ", L, "kx = ", kx, "d = ",d)
 
 		
 
@@ -127,8 +122,17 @@ def writeVertices( file, coords):
 			vert = "v "+str(x) + " " + str(y) + " " + str(z) + "\n"
 			f.write(vert)
 
-calPath = "test/testCal5.jpg"
-newPath = "test/testNew5.jpg"
+
+num = 1
+
+if(len(sys.argv) > 1): 
+
+	if(int(sys.argv[1]) >=1 and int(sys.argv[1]) <=4):
+		num = int(sys.argv[1])
+
+print(num)
+calPath = "test/testCal" + str(num)+".jpg"
+newPath = "test/testNew" + str(num) + ".jpg"
 
 
 cal = cv2.imread(calPath, 0)
@@ -178,19 +182,13 @@ longer = max(len(sortedNew), len(sortedCal))
 
 for i in range(0, longer):
 	
-	if len(sortedCal) > i:
-		print(sortedCal[i].y, sortedCal[i].x, end = " ")
+	
 
 	if len(sortedNew) > i:
-		print(sortedNew[i].y, sortedNew[i].x, end = "")
 		sortedNew[i].x = 160-sortedNew[i].x
 		sortedNew[i].y = 120-sortedNew[i].y
 
-	print("")
 
-print("----------------------------------------------------")
-
-print(len(sortedCal), len(sortedNew))
 
 cal = calibrator()
 print(type(cal))
@@ -201,6 +199,7 @@ for i in pointsList_c:
 	print(i.X, i.Y, i.Z)
 
 print("----------------------------------------------------")
+print("3D:")
 
 for i in pointsList_n:
 	print(i.X, i.Y, i.Z)
