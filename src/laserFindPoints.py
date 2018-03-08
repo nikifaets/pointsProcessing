@@ -47,7 +47,7 @@ def threshImage(img):
 			#grayscale.itemset((i,j,0),int(g))
 			grayscale.itemset((i,j,0),(int(g)+int(b)+int(r))/3)
 	
-	grayscale = cv2.add(grayscale, np.array([-190.0]))
+	grayscale = cv2.add(grayscale, np.array([-220.0]))
 	#print(grayscale[0][0])
 
 

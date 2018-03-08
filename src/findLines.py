@@ -18,6 +18,9 @@ def getPoints(img,  width, height):
 	connectivity = 8
 	output = cv2.connectedComponentsWithStats(img, connectivity, cv2.CV_16U)
 	num_labels = output[0]
+	stats = output[2]
+
+		
 	centroids = output[3]
 	#print("labels ", num_labels)
 
@@ -34,7 +37,9 @@ def getPoints(img,  width, height):
 
 	
 	#print(millisnew-millis)
-	return (pointsList,draft)
+	if len(stats) != 2:
+		return (pointsList,draft, 0)
+	return (pointsList, draft, stats[1])
 	#return pointsList
 	
 # the main file for the moment - the connected lines are processed here
@@ -84,7 +89,7 @@ def createGrid(img):
 	nodesList = list()
 	draft = np.zeros((height,width), np.uint8)
 
-	pointsList,draft = getPoints(img, width, height)
+	pointsList,draft, stats = getPoints(img, width, height)
 
 	'''ret = connect(pointsList)
 	if ret == -1:
@@ -95,7 +100,7 @@ def createGrid(img):
 
 	#return (draft, showLines, pointsList)
 
-	return draft,pointsList
+	return draft,pointsList,stats
 
 
 def test(img):

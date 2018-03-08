@@ -39,9 +39,9 @@ class calibrator:
 			point.setCalibratedCoords((X,Y,Z))
 
 			coords.append((point,(X,Y,Z)))
-		self.writeVertices("vertices.obj","pars.txt", coords)
+		self.writeVertices("calibration.obj","pars.txt", coords)
 		self.writeCoordinates("coordinates.csv", coords)
-		print("CALIBRATED")
+		print("CALIBRATED:")
 
 
 	def writeVertices(self, vertices, parameters, points):
