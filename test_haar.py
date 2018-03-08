@@ -1,9 +1,9 @@
 import cv2
 import numpy as np 
 
-casc = cv2.CascadeClassifier("haar_2/cascade.xml")
+casc = cv2.CascadeClassifier("haar_new_s15/cascade.xml")
 
-path = "annotations/scaled/laser19.jpg"
+path = "annotations1/scaled/laser32.jpg"
 img = cv2.imread(path)
 #img = cv2.cvtColor()
 points = casc.detectMultiScale(img)
