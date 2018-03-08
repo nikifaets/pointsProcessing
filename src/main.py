@@ -7,7 +7,7 @@ import transformToPoints as tr
 from calibration import calibrator
 import pattern as pt
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3,240)
 cap.set(4,320)
 projecting = False
