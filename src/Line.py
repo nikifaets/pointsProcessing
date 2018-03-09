@@ -20,11 +20,6 @@ class Line:
 	def draw(self, img):
 		self.points.sort(key=lambda point : point.x, reverse=False)
 		
-		'''x1 = self.points[0].x
-		y1 = self.points[0].y
-		x2 = self.points[len(self.points)-1].x
-		y2 = self.points[len(self.points)-1].y
-		cv2.line(img, (x1,y1), (x2,y2), 255, 1)'''
 		for i in range(0,len(self.points)-1):
 			x1 = self.points[i].x
 			y1 = self.points[i].y

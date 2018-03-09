@@ -166,13 +166,10 @@ for h in range(0, h_c):
 			points_n[h][w] = 255
 
 
-#cv2.imshow("thresh", thresh)
-#cv2.imshow("grayscale", grayscale)
 
 cv2.imshow("points", points_c)
 cv2.imshow("cal", cal)
-#cv2.imshow("newthresh", thresh1)
-#cv2.imshow("grayscalenew", grayscale1)
+
 cv2.imshow("new", new)
 cv2.imshow("newpoints", points_n)
 cv2.waitKey()
