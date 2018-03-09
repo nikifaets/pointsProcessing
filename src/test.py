@@ -143,8 +143,8 @@ ret,new = cv2.threshold(new, 100,255, cv2.THRESH_BINARY)
 h_c, w_c = cal.shape
 h_n, w_n = new.shape
 
-pointsList_n, new = fl.getPoints(new, w_n, h_n)
-pointsList_c, cal = fl.getPoints(cal, w_c, h_c)
+pointsList_n, new, tr = fl.getPoints(new, w_n, h_n)
+pointsList_c, cal, tr  = fl.getPoints(cal, w_c, h_c)
 cv2.imshow("new_p", new)
 cv2.imshow("cal_p", cal)
 
