@@ -7,8 +7,6 @@ img = cv2.resize(img1, (0,0), fx=0.1, fy=0.1)
 gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
 edges = cv2.Canny(gray,100,200,apertureSize = 3)
 
-#cv2.imshow("cannyEdge", edges)
-#cv2.waitKey()
 
 lines = cv2.HoughLines(edges,1,np.pi/180,1)
 print(len(lines))

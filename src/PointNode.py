@@ -23,15 +23,6 @@ class PointNode(Point):
 		self.downcenter = (self.nullpoint,invalidDistance)
 		self.downleft = (self.nullpoint,invalidDistance)
 
-		'''self.neighbors.append(self.upleft)
-		self.neighbors.append(self.upcenter)
-		self.neighbors.append(self.upright)
-		self.neighbors.append(self.right)
-		self.neighbors.append(self.left)
-		self.neighbors.append(self.downright)
-		self.neighbors.append(self.downcenter)
-		self.neighbors.append(self.downleft)'''
-
 
 
 	def write(self, point,dist):
