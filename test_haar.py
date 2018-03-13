@@ -1,7 +1,7 @@
 import cv2
 import numpy as np 
 
-casc = cv2.CascadeClassifier("haar_new_s5/cascade.xml")
+casc = cv2.CascadeClassifier("hog_s15/cascade.xml")
 
 cap = cv2.VideoCapture(0)
 '''path = "annotations/scaled/edit/calibrate2.jpg"
