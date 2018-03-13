@@ -1,10 +1,10 @@
 import cv2
 import numpy as np 
 
-casc = cv2.CascadeClassifier("haar_new_s20/cascade.xml")
+casc = cv2.CascadeClassifier("haar_new_s5/cascade.xml")
 
 cap = cv2.VideoCapture(0)
-'''path = "annotations/scaled/2017-11-09-214806.jpg"
+'''path = "annotations/scaled/edit/calibrate2.jpg"
 img = cv2.imread(path)
 points = casc.detectMultiScale(img)
 
