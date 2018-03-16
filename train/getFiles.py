@@ -1,6 +1,26 @@
 import os
 import cv2
 import numpy as np
+
+def cut(name):
+
+    save = "/home/nikifaets/code/pointsProcessing/negative_samples/pics"
+    img = cv2.imread("/home/nikifaets/code/pointsProcessing/train/cut/neg/"+path, 1)
+    roi_h = 35
+    roi_w = 35
+
+    h,w,c = img.shape
+    print("kur")
+    count = 0
+    for i in range(0, h, roi_h):
+        for j in range(0,w, roi_w):
+
+            print("kur")
+            roi = img[i:i+roi_h, j:j+roi_w]
+            cv2.imwrite(save+"/model"+path+str(count)+".jpg", roi)
+            count+=1
+
+
 def findfiles(directory):
     objects = os.listdir(directory)  # find all objects in a dir
 
@@ -27,4 +47,5 @@ files = findfiles(path+"pics")
 f = open(path+"negative_samples.txt", "w")
 
 for image in files:
-    f.write("/home/nikifaets/code/poinsProcessing/negative_samples/pics/"+image+"\n")    
+    print(image)
+    f.write("/home/nikifaets/code/pointsProcessing/negative_samples/pics/"+image+"\n")    

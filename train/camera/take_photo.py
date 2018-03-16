@@ -12,7 +12,7 @@ while(not ret):
 
 
 
-num = 40
+num = 60
 while(True):
 
 	ret, img = cap.read()
