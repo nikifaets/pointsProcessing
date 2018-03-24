@@ -57,9 +57,7 @@ class Pattern:
 			self.points2d.append(p)
 			self.points3d.append(p)
 
-		lines = self.findRows(points=self.savedPoints)
-
-		self.matrix = self.linesToMatrix(lines)
+		
 	
 
 	def linesToMatrix(self, lines):
