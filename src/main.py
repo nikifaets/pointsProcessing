@@ -8,6 +8,7 @@ from calibration import calibrator
 import pattern as pt
 from PointNode import PointNode
 from CorrectSignal import CorrectSignal as cr
+import rotatePoints as rp
 
 ret = False
 cam = 1
@@ -39,6 +40,7 @@ while(True):
 
 	pointsList = list()
 	ret, img = cap.read()
+	img_h, img_w, img_channels = img.shape
 	detected = np.zeros((480,640,1), np.uint8)
 	fixed = np.zeros((480,640,1), np.uint8)
 	
@@ -56,6 +58,8 @@ while(True):
 
 	correct.update(pointsList)
 	pointsList_new = correct.getFixedData()
+	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), 18)
+
 
 	for p in pointsList_new:
 		fixed[int(p.y)][int(p.x)] = 255
