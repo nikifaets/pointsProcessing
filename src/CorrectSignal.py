@@ -18,12 +18,13 @@ class CorrectSignal:
 		self.hist_w = int(self.img_w/self.roi_w)
 		self.hist_h = int(self.img_h/self.roi_h)
 
-		print(self.hist_w, self.hist_h)
+		
 		# calculate the number of bins, where the number of points in the current bin is being counted
 		# first h of array, then w
+		#dimension 0 is number of points in area, dimension 1 is average x coordinate, dimension 2 is average y coordinate
 
-		self.hist_new = np.zeros((self.hist_h+1, self.hist_w+1), np.uint8)
-		self.hist_orig = np.zeros((self.hist_h+1, self.hist_w+1), np.uint8)
+		self.hist_new = np.zeros((self.hist_h+1, self.hist_w+1, 3), np.int32)
+		self.hist_orig = np.zeros((self.hist_h+1, self.hist_w+1, 3), np.int32)
 
 		
 
@@ -34,15 +35,22 @@ class CorrectSignal:
 			for i in range(0, self.hist_h):
 				for j in range(0, self.hist_w):
 
-					print(self.hist_new[1][1])
-					if self.hist_new[i][j] >= self.minCount:
+					
+					if self.hist_new[i][j][0] >= self.minCount:
 
-						print(i,j, self.hist_w*j, self.hist_h*i)
-						self.hist_orig[i][j] = 1
+						num = self.hist_new[i][j][0]
+						x = self.hist_new[i][j][1]
+						y = self.hist_new[i][j][2]
+
+						self.hist_orig[i][j][0] = 1
+						self.hist_orig[i][j][1] = int(x/num)
+						self.hist_orig[i][j][2] = int(y/num)
 						
 
 					else:
-						self.hist_orig[i][j] = 0
+						self.hist_orig[i][j][0] = 0
+						self.hist_orig[i][j][1] = 0
+						self.hist_orig[i][j][2] = 0
 						
 			self.hist_new = np.copy(self.hist_orig)
 			self.bufCounter = 0
@@ -59,7 +67,11 @@ class CorrectSignal:
 			
 			#print(p.x, "-> ", x_pos)
 
-			self.hist_new[y_pos][x_pos] +=1
+			
+			self.hist_new[y_pos][x_pos][0] +=1
+			self.hist_new[y_pos][x_pos][1] += int(p.x)
+			self.hist_new[y_pos][x_pos][2] += int(p.y)
+
 
 		self.bufCounter+=1
 
@@ -70,8 +82,12 @@ class CorrectSignal:
 		for i in range(0, self.hist_h):
 				for j in range(0, self.hist_w):
 
-					if self.hist_orig[i][j]>=1:
-						pointsList.append(PointNode(j*self.roi_w, i*self.roi_h))
+					if self.hist_orig[i][j][0]>=1:
+
+						x = self.hist_orig[i][j][1]
+						y = self.hist_orig[i][j][2]
+
+						pointsList.append(PointNode(x, y))
 
 		return pointsList
 

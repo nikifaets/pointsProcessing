@@ -1,7 +1,7 @@
 import cv2
 import numpy as np  
 
-cam = -5
+cam = 1
 ret = False
 
 while(not ret):
