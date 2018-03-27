@@ -2,7 +2,6 @@ import cv2
 import numpy as np 
 import math
 from connectPoints import connect 
-from connectPoints import sort
 from Point import Point
 from PointNode import PointNode
 import queue

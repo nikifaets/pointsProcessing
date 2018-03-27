@@ -57,12 +57,8 @@ class Pattern:
 			self.points2d.append(p)
 			self.points3d.append(p)
 
-		lines = self.findRows(points=self.savedPoints)
-
-		self.matrix = self.linesToMatrix(lines)
+		
 	
-				
-		#print("neghthhhh",len(self.matrix))
 
 	def linesToMatrix(self, lines):
 
@@ -70,89 +66,21 @@ class Pattern:
 		width = 30
 		matrix = list()
 		for i in range(0, len(lines)):
-			#print(lines[i].avg_y)
+
 			points = lines[i].points
-			#print("for everyline")
+
 			row = list()
 			for j in range(0, len(points)):
-				#print("insert points")
-				
-				#print("appending ", points[j])
+
 				row.append(points[j])
-			#for p in row:
-			#	print(p.x, p.y)
-			#print("----------------------")
+
 			matrix.append(row)
-		#print("neghthhhh",len(self.matrix))
+
 		return matrix
 
 	def getCurrentMesh(self,points):
 		self.currPoints = points
 
-	def findRows(self,points):
-
-		#print(self.points[0])
-		
-		for point in points:
-	
-
-			neighs = cp.findNeighbours(point,points)
-			bestn = cp.makeConnectionByMinYdiff(point, neighs)
-	
-			point.write(bestn, 32)
-			bestn.write(point, 32)
-
-	
-		lines = self.defineLines(points)
-		return lines
-
-	def defineLines(self, points):
-
-		lines = []
-		mem = []
-		for point in points:
-			#print("point ", point.x, point.y)
-			f = False
-			for i in mem:
-				if i == point:
-					f = True
-					break
-			if not f:
-				#print("not in mem")
-				frontl = queue.Queue()
-				collected = []
-				
-				frontl.put(point)
-				mem.append(point)
-				collected.append(point)
-				while(frontl.qsize()>0):
-					
-					curr = frontl.get()
-					#print("loop", len(frontl), curr.x, curr.y)
-					
-					#print(len(curr.neighbors))
-					for neigh in curr.neighbors:
-						
-						n = neigh[0]
-						#print("neighbor ", n.x, n.y)
-						found = False
-						for i in mem:
-							#print(i,n)
-							if i == n:
-								#print("passed")
-								found = True
-								break
-
-						if not found and n!=PointNode(0,0):
-							#print("neighbor not in mem")
-							mem.append(n)
-							frontl.put(n)
-							collected.append(n)
-			#print(len(collected))
-				#if len(collected) >=5:
-				lines.append(Line(collected))
-		#print (lines)
-		return lines
 
 	def compareWithPattern(self,currMatrix):
 
