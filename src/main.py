@@ -58,11 +58,13 @@ while(True):
 
 	correct.update(pointsList)
 	pointsList_new = correct.getFixedData()
-	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), 18)
+	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), 10)
 
 
 	for p in pointsList_new:
-		fixed[int(p.y)][int(p.x)] = 255
+
+		if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
+			fixed[int(p.y)][int(p.x)] = 255
 
 
 	cv2.imshow("img", img)
