@@ -6,6 +6,7 @@ from Point import Point
 from PointNode import PointNode
 import queue
 import time
+from Line import Line
 
 def getPoints(img,  width, height):
 
@@ -69,11 +70,30 @@ def drawLines(lines, width, height):
 
 	return connectedLines
 
-def collectLines(points):
+def collectLines(pointsList):
 	lines = list()
-	for i in points:
-		received = i.convertToLine()
-		lines.extend(received)
+	
+	pointsList.sort(key = lambda point:point.x, reverse=False)
+
+	start = 0
+	for i in range(1, len(pointsList)-1):
+
+		p = pointsList[i]
+		p_prev = pointsList[i-1]
+		p_next = pointsList[i+1]
+
+		diff_prev = math.abs(p_prev.y-p.y)
+		diff_next = math.abs(p_next.y-p.y)
+
+		if diff_next >= 3*diff_prev:
+
+			line = Line(pointsList[start:i+1])
+			start = i+1
+			lines.append(line)
+
+	return lines
+
+
 
 	return lines
 

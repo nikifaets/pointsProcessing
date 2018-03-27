@@ -1,6 +1,7 @@
 import cv2
 import numpy as np 
 import time
+from extractor import getPoints
 import laserFindPoints as cpt
 import findLines as fl
 import transformToPoints as tr
@@ -38,33 +39,41 @@ points = list()
 
 while(True):
 
+	#load images to work with and list of points
 	pointsList = list()
 	ret, img = cap.read()
 	img_h, img_w, img_channels = img.shape
-	detected = np.zeros((480,640,1), np.uint8)
-	fixed = np.zeros((480,640,1), np.uint8)
+	detected = np.zeros((img_h, img_w, 1), np.uint8)
+	fixed = np.zeros((img_h, img_w, 1), np.uint8)
+	lines = np.zeros((img_h, img_w, 1), np.uint8)
 
+	# get list of points and visualize it in the image "detected"
+	pointsList = getPoints(image, casc)
 
-	points = casc.detectMultiScale(img)
+	for p in pointsList:
 
-	for(x, y, h, w) in points:
-		cv2.rectangle(img, (x,y), (x+w, y+h), (255,0,0), -1)
-		p_x = x+w/2
-		p_y = y+h/2
-		pointsList.append(PointNode(p_x, p_y))
-		detected[int(p_y)][int(p_x)] = 255
+		cv2.circle(detected, (int(p.y)int(p.x)), 5, 200, -1)
 
 	correct.update(pointsList)
+
+	# get list of points, which appear more frequently and visualize them in the image "fixed"
 	pointsList_new = correct.getFixedData()
 	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), 10)
 
-
 	for p in pointsList_new:
-
 		if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
-			fixed[int(p.y)][int(p.x)] = 255
+
+			cv2.circle(fixed, (int(p.x), int(p.x)), 4, 200, -1)
 
 
+	#create lines from the points with similar y coordinate and visualize them in image "lines"
+
+	lines = fl.collectLines(pointsList_new)
+
+	for line in lines:
+		line.draw(lines)
+
+		
 	cv2.imshow("img", img)
 	cv2.imshow("points", detected)
 	cv2.imshow("fixed", fixed)

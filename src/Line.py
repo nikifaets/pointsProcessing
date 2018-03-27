@@ -1,30 +1,17 @@
-#from PointNode import PointNode
-from Point import Point
+from PointNode import PointNode
 import cv2
 
 
 class Line:
 
-	
-	def __init__(self, a, b, dist):
 
-		self.start = Point(a.x, a.y)
-		self.end = Point(b.x, b.y) 
-		self.length = dist
-
-	def __init__(self, list):
-		self.points = list
+	def __init__(self, poinstList):
+		self.pointsList = pointsList
 		self.avg_y = self.mid_y()
-		self.points.sort(key = lambda point:point.x, reverse=False)
+		self.pointsList.sort(key = lambda point:point.x, reverse=False)
 
 	def draw(self, img):
-		self.points.sort(key=lambda point : point.x, reverse=False)
 		
-		'''x1 = self.points[0].x
-		y1 = self.points[0].y
-		x2 = self.points[len(self.points)-1].x
-		y2 = self.points[len(self.points)-1].y
-		cv2.line(img, (x1,y1), (x2,y2), 255, 1)'''
 		for i in range(0,len(self.points)-1):
 			x1 = self.points[i].x
 			y1 = self.points[i].y
