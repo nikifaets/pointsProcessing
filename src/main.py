@@ -10,9 +10,11 @@ import pattern as pt
 from PointNode import PointNode
 from CorrectSignal import CorrectSignal as cr
 import rotatePoints as rp
+import os
+from pathlib import Path
 
 ret = False
-cam = 1
+cam = 0
 while(not ret):
 
 	cap = cv2.VideoCapture(cam)
@@ -32,7 +34,9 @@ b = 98
 e = 101
 
 correct = cr((640, 480), (20,20), 4, 3)
-casc = cv2.CascadeClassifier("hog_s10/cascade.xml")
+
+parent = Path(os.getcwd()).parent
+casc = cv2.CascadeClassifier(str(parent)+"/hog_s10/cascade.xml")
 pat = pt.Pattern()
 points = list()
 

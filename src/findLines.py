@@ -71,9 +71,10 @@ def drawLines(lines, width, height):
 	return connectedLines
 
 def collectLines(pointsList):
+
 	lines = list()
 	
-	pointsList.sort(key = lambda point:point.x, reverse=False)
+	pointsList.sort(key = lambda point:point.y, reverse=False)
 
 	start = 0
 	counter = 0
@@ -88,10 +89,14 @@ def collectLines(pointsList):
 		
 		counter+=1
 
-		if diff_next >= 3*diff_prev and counter>=3:
+		if diff_next >=7 or i == len(pointsList)-2:
 
-			line = Line(pointsList[start:i+1])
+			if i < len(pointsList)-2:
+				line = Line(pointsList[start:i+1])
+			else:
+				line = Line(pointsList[start:i+2])
 			start = i+1
+			counter = 0
 			lines.append(line)
 
 	return lines

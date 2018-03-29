@@ -7,7 +7,7 @@ class Line:
 	def __init__(self, pointsList):
 		self.pointsList = pointsList
 		self.avg_y = self.mid_y()
-		self.pointsList.sort(key = lambda point:point.x, reverse=False)
+		self.pointsList.sort(key = lambda point:point.y, reverse=False)
 
 	def draw(self, img):
 		
