@@ -45,25 +45,25 @@ while(True):
 	img_h, img_w, img_channels = img.shape
 	detected = np.zeros((img_h, img_w, 1), np.uint8)
 	fixed = np.zeros((img_h, img_w, 1), np.uint8)
-	lines = np.zeros((img_h, img_w, 1), np.uint8)
+	lines_detected = np.zeros((img_h, img_w, 1), np.uint8)
 
 	# get list of points and visualize it in the image "detected"
-	pointsList = getPoints(image, casc)
+	pointsList = getPoints(img, casc)
 
-	for p in pointsList:
+	for p in pointsList:	
 
-		cv2.circle(detected, (int(p.y)int(p.x)), 5, 200, -1)
+		cv2.circle(detected, (int(p.y),int(p.x)), 5, 200, -1)
 
 	correct.update(pointsList)
 
 	# get list of points, which appear more frequently and visualize them in the image "fixed"
 	pointsList_new = correct.getFixedData()
-	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), 10)
+	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), 30)
 
 	for p in pointsList_new:
 		if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
 
-			cv2.circle(fixed, (int(p.x), int(p.x)), 4, 200, -1)
+			cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
 
 
 	#create lines from the points with similar y coordinate and visualize them in image "lines"
@@ -71,9 +71,9 @@ while(True):
 	lines = fl.collectLines(pointsList_new)
 
 	for line in lines:
-		line.draw(lines)
+		line.draw(lines_detected)
 
-		
+	cv2.imshow("lines", lines_detected)
 	cv2.imshow("img", img)
 	cv2.imshow("points", detected)
 	cv2.imshow("fixed", fixed)

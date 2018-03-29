@@ -1,5 +1,4 @@
 from Point import Point
-from Line import Line
 
 class PointNode(Point):
 

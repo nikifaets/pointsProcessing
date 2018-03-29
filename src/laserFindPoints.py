@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-from extractor import thresh
-from extractor import threshNormal
 
 
 # this algorithm extracts the points from the picture - outputs a new picture where only the points are to be seen

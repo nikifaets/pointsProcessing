@@ -1,10 +1,12 @@
 import cv2
 import numpy as np 
+from PointNode import PointNode
 
 def getPoints(img, classiffier):
 
-	points = casc.detectMultiScale(img)
+	points = classiffier.detectMultiScale(img)
 
+	pointsList = list()
 	for(x, y, h, w) in points:
 		cv2.rectangle(img, (x,y), (x+w, y+h), (255,0,0), -1)
 		p_x = x+w/2

@@ -76,16 +76,19 @@ def collectLines(pointsList):
 	pointsList.sort(key = lambda point:point.x, reverse=False)
 
 	start = 0
+	counter = 0
 	for i in range(1, len(pointsList)-1):
 
 		p = pointsList[i]
 		p_prev = pointsList[i-1]
 		p_next = pointsList[i+1]
 
-		diff_prev = math.abs(p_prev.y-p.y)
-		diff_next = math.abs(p_next.y-p.y)
+		diff_prev = math.fabs(p_prev.y-p.y)
+		diff_next = math.fabs(p_next.y-p.y)
+		
+		counter+=1
 
-		if diff_next >= 3*diff_prev:
+		if diff_next >= 3*diff_prev and counter>=3:
 
 			line = Line(pointsList[start:i+1])
 			start = i+1
