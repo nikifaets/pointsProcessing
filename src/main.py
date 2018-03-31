@@ -16,7 +16,7 @@ from pathlib import Path
 ret = False
 cam = 0
 while(not ret):
-
+ 	
 	cap = cv2.VideoCapture(cam)
 	ret,img = cap.read()
 	print("initializing camera ", ret)
@@ -34,9 +34,9 @@ b = 98
 e = 101
 
 correct = cr((640, 480), (20,20), 4, 3)
-
+rotate_angle = -38
 parent = Path(os.getcwd()).parent
-casc = cv2.CascadeClassifier(str(parent)+"/hog_s10/cascade.xml")
+casc = cv2.CascadeClassifier("hog_s10/cascade.xml")
 pat = pt.Pattern()
 points = list()
 
@@ -46,6 +46,7 @@ while(True):
 	#load images to work with and list of points
 	pointsList = list()
 	ret, img = cap.read()
+	img = cv2.GaussianBlur(img, (3,3),2)
 	img_h, img_w, img_channels = img.shape
 	detected = np.zeros((img_h, img_w, 1), np.uint8)
 	fixed = np.zeros((img_h, img_w, 1), np.uint8)
@@ -56,13 +57,13 @@ while(True):
 
 	for p in pointsList:	
 
-		cv2.circle(detected, (int(p.y),int(p.x)), 5, 200, -1)
+		cv2.circle(detected, (int(p.x),int(p.y)), 5, 200, -1)
 
 	correct.update(pointsList)
 
 	# get list of points, which appear more frequently and visualize them in the image "fixed"
 	pointsList_new = correct.getFixedData()
-	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), 30)
+	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), rotate_angle)
 
 	for p in pointsList_new:
 		if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
@@ -85,16 +86,36 @@ while(True):
 	k = cv2.waitKey(1)
 	if k == s:
 
+		fixed.fill(0)
+		rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), -rotate_angle)
+
+		
 		cl = calibrator()
-		cl.calibrate(pointsList)
+
+		for p in pointsList_new:
+			if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
+
+				cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
+
 		pat = pt.Pattern()
-		cv2.imwrite("calibrated.jpg", detected)
+		cl.calibrate(pointsList_new, fixed)
+		cv2.imwrite("calibrated.jpg", fixed)
 
 	if k == c:
 
+
 		print("got C")
 		pat.getDepth(pointsList)
-		cv2.imwrite("newGrid.jpg", detected)
+		fixed.fill(0)
+
+		rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), -rotate_angle)
+
+		for p in pointsList_new:
+			if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
+
+				cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
+
+		cv2.imwrite("newGrid.jpg", fixed)
 
 	k = cv2.waitKey(1)
 	if k == e:

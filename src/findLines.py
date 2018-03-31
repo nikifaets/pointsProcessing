@@ -37,10 +37,10 @@ def getPoints(img,  width, height):
 
 	
 	#print(millisnew-millis)
-	if len(stats) != 2:
+	'''if len(stats) != 2:
 		return (pointsList,draft, 0)
-	return (pointsList, draft, stats[1])
-	#return pointsList
+	return (pointsList, draft, stats[1])'''
+	return pointsList
 	
 # the main file for the moment - the connected lines are processed here
 #img = cv2.imread("demo/edged6.jpg", 0)
@@ -89,7 +89,7 @@ def collectLines(pointsList):
 		
 		counter+=1
 
-		if diff_next >=7 or i == len(pointsList)-2:
+		if diff_next >=8 or i == len(pointsList)-2:
 
 			if i < len(pointsList)-2:
 				line = Line(pointsList[start:i+1])
@@ -99,43 +99,65 @@ def collectLines(pointsList):
 			counter = 0
 			lines.append(line)
 
-	return lines
-
-
+	lines = fixLines(lines)
 
 	return lines
 
-def createGrid(img):
-	#cv2.imshow("img", img)
-
-	height,width = img.shape
-	
-
-	#points = np.zeros((width,height), np.uint8)
-	pointsList = list()
-	nodesList = list()
-	draft = np.zeros((height,width), np.uint8)
-
-	pointsList,draft, stats = getPoints(img, width, height)
-
-	'''ret = connect(pointsList)
-	if ret == -1:
-		return (draft, draft,[PointNode(0,0)])
-	lines = list()
-	lines = collectLines(pointsList)
-	showLines = drawLines(lines, width, height)'''
-
-	#return (draft, showLines, pointsList)
-
-	return draft,pointsList,stats
 
 
-def test(img):
-	draft,showLines = createGrid(img)
-	cv2.imshow("draft", draft)
-	cv2.imshow("showLines", showLines)
-	cv2.waitKey()
+
+def fixLines(lines):
+
+		maxLen = 0
+
+		for i in range(0, len(lines)):
+
+			if i<len(lines):
+
+				if lines[i].length<=3:
+					del lines[i]
 
 
-'''img = cv2.imread("demo/edged24.jpg",0)
-test(img)'''
+		for line in lines:
+
+			if line.length > maxLen:
+				maxLen = line.length
+
+		for line in lines:
+
+			avgXDist = 0
+			xDistSum = 0
+			counter = 1
+
+			pointsList = line.getPoints()
+			pointsList.sort(key = lambda point:point.x, reverse=False)
+
+			#rp.rotatePoints(pointsList, PointNode(img.shape[1], img.shape[0]), self.rotation_angle)
+
+			for i in range(0, len(pointsList)-1):
+
+				xDistSum += pointsList[i].x
+				counter+=1
+
+			avgXDist = xDistSum/counter
+
+
+			for i in range(1, len(pointsList)-1):
+
+				if i < len(pointsList)-1:
+
+					p = pointsList[i]
+					p_prev = pointsList[i-1]
+					p_next = pointsList[i+1]
+
+					xDist_prev = math.fabs(p.x-p_prev.x)
+					xDist_next = math.fabs(p.x-p_next.x)
+
+					if xDist_next <= 0.5*avgXDist or xDist_prev <= 0.5*avgXDist:
+
+						del pointsList[i]
+
+			line = Line(pointsList)
+
+		#rp.rotatePoints(pointsList, PointNode(img.shape[1], img.shape[0]), -self.rotation_angle)
+		return lines

@@ -7,7 +7,8 @@ class Line:
 	def __init__(self, pointsList):
 		self.pointsList = pointsList
 		self.avg_y = self.mid_y()
-		self.pointsList.sort(key = lambda point:point.y, reverse=False)
+		self.pointsList.sort(key = lambda point:point.x, reverse=False)
+		self.length = len(self.pointsList)
 
 	def draw(self, img):
 		
@@ -25,6 +26,12 @@ class Line:
 			sum += point.y
 		num = len(self.pointsList)
 		return sum/num
+
+	def getPoints(self):
+
+		return self.pointsList
+
+
 
 
 

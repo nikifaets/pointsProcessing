@@ -3,6 +3,9 @@ import numpy as np
 import pattern
 from PointNode import PointNode
 import csv
+import rotatePoints as rp
+import math
+from Line import Line
 
 class calibrator:
 	d = 21.5
@@ -10,10 +13,13 @@ class calibrator:
 	prop = 0.00218
 	kx = 0
 	ky = 0
+	rotation_angle = -38
 
-	def calibrate(self,points):
+	def calibrate(self,points, img):
 
 		coords = list()
+
+		points = self.fixImage(points, img)
 		for point in points:
 
 			
@@ -71,5 +77,65 @@ class calibrator:
 
 			row = [float(x), float(y), float(X), float(Y), float(Z)]
 			writer.writerow(row)
+
+
+	def fixLines(self, lines):
+
+		maxLen = 0
+
+		for i in range(0, len(lines)):
+
+			if i<len(lines):
+
+				if lines[i].length<=3:
+					del lines[i]
+
+
+		for line in lines:
+
+			if line.length > maxLen:
+				maxLen = line.length
+
+		for line in lines:
+
+			avgXDist = 0
+			xDistSum = 0
+			counter = 1
+
+			pointsList = line.getPoints()
+			pointsList.sort(key = lambda point:point.x, reverse=False)
+			print(pointsList)
+			#rp.rotatePoints(pointsList, PointNode(img.shape[1], img.shape[0]), self.rotation_angle)
+
+			for i in range(0, len(pointsList)-1):
+
+				xDistSum += pointsList[i].x
+				counter+=1
+
+			avgXDist = xDistSum/counter
+			print(avgXDist)
+
+
+			for i in range(1, len(pointsList)-1):
+
+				if i < len(pointsList)-1:
+					print(i, len(pointsList)-1)
+					p = pointsList[i]
+					p_prev = pointsList[i-1]
+					p_next = pointsList[i+1]
+
+					xDist_prev = math.fabs(p.x-p_prev.x)
+					xDist_next = math.fabs(p.x-p_next.x)
+
+					if xDist_next <= 0.5*avgXDist or xDist_prev <= 0.5*avgXDist:
+
+						print(xDist_next, xDist_prev)
+						del pointsList[i]
+
+			line = Line(pointsList)
+
+		#rp.rotatePoints(pointsList, PointNode(img.shape[1], img.shape[0]), -self.rotation_angle)
+		return lines
+
 
 

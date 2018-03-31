@@ -60,46 +60,10 @@ class Pattern:
 		
 	
 
-	def linesToMatrix(self, lines):
-
-		lines.sort(key=lambda x: x.avg_y, reverse=False)
-		width = 30
-		matrix = list()
-		for i in range(0, len(lines)):
-
-			points = lines[i].points
-
-			row = list()
-			for j in range(0, len(points)):
-
-				row.append(points[j])
-
-			matrix.append(row)
-
-		return matrix
 
 	def getCurrentMesh(self,points):
 		self.currPoints = points
 
-
-	def compareWithPattern(self,currMatrix):
-
-		coords = list()
-		for i in range(0, len(currMatrix)):
-			for p in range(0, len(currMatrix[i])):
-
-
-				saved_point = self.matrix[i][p]
-				X0 = saved_point.X
-				Y0 = saved_point.Y
-				Z0 = saved_point.Z
-
-				X = X0*(self.d/(X0+self.L*self.kx))
-				Y = Y0*(self.d/(X0+self.L*self.kx))
-				Z = self.L*(self.d/(X0+self.L*self.kx))
-				coords.append((X,Y,Z))
-
-		self.writeVertices("surface.obj", coords)
 
 	def getDepth(self,pointsList):
 
