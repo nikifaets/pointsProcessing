@@ -28,8 +28,13 @@ def calculateDepth(point_c, point_n):
 	prop = float(readp.readline())
 	readp.close()
 
-	kx = point_n.x*prop
-	ky = point_n.y*prop
+	point_n.x = 160-point_n.x
+	point_n.y = 120-point_n.y
+
+	point_c.x = 160-point_c.x
+	point_c.y = 120-point_c.y
+	kx = point_c.x*prop
+	ky = point_c.y*prop
 	point_c.X = d-L*kx
 	point_c.Y = -L*ky
 	point_c.Z = L
@@ -37,17 +42,16 @@ def calculateDepth(point_c, point_n):
 	X0 = point_c.X
 	Y0 = point_c.Y
 
+	
+
+	kx = point_n.x*prop
+	ky = point_n.y*prop
+
 	point_n.X = float(X0)*float((d/(float(X0)+L*float(kx))))
 
-	print("sdfsfdsf", X0, d, kx)
 
 	point_n.Y = float(Y0)*(d/(float(X0)+L*kx))
 	point_n.Z = L*(d/(X0+L*kx))
-
-	print("poly", (d/(float(X0)+L*kx)))
-	print("x0, y0 ", X0, Y0)
-	print("dp ", point_n.x, point_n.y, point_n.X, point_n.Y, point_n.Z)
-	print("Z ", point_n.Z)
 
 	return point_n
 
@@ -62,7 +66,7 @@ def compareLines(lines_c, lines_n, center):
 		for line_n in lines_n:
 
 			
-			if line_c.avg_y >= line_n.avg_y-30 and line_c.avg_y<=line_n.avg_y+30:
+			if line_c.avg_y >= line_n.avg_y-15 and line_c.avg_y<=line_n.avg_y+15:
 
 				if line_c.length == line_n.length:
 
@@ -75,7 +79,6 @@ def compareLines(lines_c, lines_n, center):
 						c = points_c[i]
 						n = points_n[i]
 
-						print("C AND N", c.x, n.x, c.y, n.y)
 						rp.rotatePoints([c], center, -rotation_angle)
 						rp.rotatePoints([n], center, -rotation_angle)
 						depth_point = calculateDepth(c,n)
@@ -100,6 +103,9 @@ center = PointNode(w/2, h/2)
 
 rotation_angle = -38
 
+ret,cal = cv2.threshold(cal, 100,255, cv2.THRESH_BINARY)
+ret,new = cv2.threshold(new, 100,255, cv2.THRESH_BINARY)
+
 pointsList_cal = fl.getPoints(cal, w, h)
 pointsList_new = fl.getPoints(new, w, h)
 
@@ -109,14 +115,17 @@ rp.rotatePoints(pointsList_new, PointNode(w/2, h/2), rotation_angle)
 lines_cal = fl.collectLines(pointsList_cal)
 lines_new = fl.collectLines(pointsList_new)
 
-rp.rotatePoints(pointsList_cal, PointNode(w/2, h/2), rotation_angle)
-rp.rotatePoints(pointsList_new, PointNode(w/2, h/2), rotation_angle)
-
 for line in lines_cal:
 	line.draw(cal_test)
 
+
 for line in lines_new:
 	line.draw(new_test)
+
+#rp.rotatePoints(pointsList_cal, PointNode(w/2, h/2), -rotation_angle)
+#rp.rotatePoints(pointsList_new, PointNode(w/2, h/2), -rotation_angle)
+
+
 
 pointsList = compareLines(lines_cal, lines_new, center)
 print(len(pointsList))

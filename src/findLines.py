@@ -35,17 +35,7 @@ def getPoints(img,  width, height):
 			pointsList.append(PointNode(i[0], i[1]))
 									
 
-	
-	#print(millisnew-millis)
-	'''if len(stats) != 2:
-		return (pointsList,draft, 0)
-	return (pointsList, draft, stats[1])'''
 	return pointsList
-	
-# the main file for the moment - the connected lines are processed here
-#img = cv2.imread("demo/edged6.jpg", 0)
-#img = cv2.imread("laser/demo.jpg", 0)
-#width,height = img.shape
 
 def drawLines(lines, width, height):
 
@@ -64,9 +54,6 @@ def drawLines(lines, width, height):
 
 		cv2.line(connectedLines, (y1,x1), (y2,x2), 100, 1)
 
-		#if(i.length==999):
-		#	cv2.line(connectedLines, (x1,y1), (x2,y2), 250, 2)
-		
 
 	return connectedLines
 

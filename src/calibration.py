@@ -19,7 +19,7 @@ class calibrator:
 
 		coords = list()
 
-		points = self.fixImage(points, img)
+		#points = self.fixLines(points)
 		for point in points:
 
 			
