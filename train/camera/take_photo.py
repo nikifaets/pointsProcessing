@@ -8,6 +8,7 @@ while(not ret):
 
 	cap = cv2.VideoCapture(cam)
 	ret,img = cap.read()
+	img = cv2.threshold(img, 220, 255, cv2.THRESH_BINARY_INV)
 	print("trying ", ret)
 
 
@@ -16,6 +17,8 @@ num = 60
 while(True):
 
 	ret, img = cap.read()
+	img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+	ret,img = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
 
 	if ret:
 
