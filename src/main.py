@@ -14,7 +14,7 @@ import os
 from pathlib import Path
 
 ret = False
-cam = 0
+cam = 1
 while(not ret):
  	
 	cap = cv2.VideoCapture(cam)
