@@ -16,7 +16,6 @@ def selectROI(img):
 	np.copyto(b,g)
 	np.copyto(r,g)
 
-	#r = np.zeros((h,w,1),np.uint8)
 
 	res = cv2.merge((b,g,r))
 
@@ -48,9 +47,7 @@ def getROI(img):
 	for i in range(1, num_labels):
 
 		x,y,w,h,area = stats[i]
-		#print("y ", y, "x ", x, "w ", w, "h ", h)
 		roi = img[y:y+h,x:x+w]
-		cv2.rectangle(img, (x,y),(x+w,y+h), (0,0,255), 1)
 		rois.append((roi, (x,y)))
 
 	return rois, g
