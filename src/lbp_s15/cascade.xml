@@ -15,7 +15,7 @@
   <featureParams>
     <maxCatCount>256</maxCatCount>
     <featSize>1</featSize></featureParams>
-  <stageNum>12</stageNum>
+  <stageNum>5</stageNum>
   <stages>
     <!-- stage 0 -->
     <_>

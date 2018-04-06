@@ -12,6 +12,7 @@ from CorrectSignal import CorrectSignal as cr
 import rotatePoints as rp
 import os
 from pathlib import Path
+import roiSelector as rs 
 
 ret = False
 cam = 1
@@ -36,7 +37,7 @@ e = 101
 correct = cr((640, 480), (20,20), 4, 3)
 rotate_angle = -38
 parent = Path(os.getcwd()).parent
-casc = cv2.CascadeClassifier("lbp_s15/cascade.xml")
+casc = cv2.CascadeClassifier("lbp_s10/cascade.xml")
 pat = pt.Pattern()
 points = list()
 
@@ -52,8 +53,11 @@ while(True):
 	fixed = np.zeros((img_h, img_w, 1), np.uint8)
 	lines_detected = np.zeros((img_h, img_w, 1), np.uint8)
 
+	rois, binary = rs.getROI(img)
+
+
 	# get list of points and visualize it in the image "detected"
-	pointsList = getPoints(img, casc)
+	pointsList = getPoints(img, casc, rois)
 
 	for p in pointsList:	
 
@@ -78,10 +82,12 @@ while(True):
 	for line in lines:
 		line.draw(lines_detected)
 
+
 	cv2.imshow("lines", lines_detected)
 	cv2.imshow("img", img)
 	cv2.imshow("points", detected)
 	cv2.imshow("fixed", fixed)
+	cv2.imshow("binary", binary)
 
 	k = cv2.waitKey(1)
 	if k == s:

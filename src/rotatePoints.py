@@ -23,17 +23,20 @@ def rotatePoints(pointsList, center, deg):
 
 		px = p.x-cx
 		py = p.y-cy
-		dist = math.sqrt(px*px + py*py)
 
-		
-		alpha = math.degrees(math.asin(py/dist))
-		alpha = transfrom_degrees(alpha, PointNode(px,py))
+		if py != 0 and px != 0:
+			dist = math.sqrt(px*px + py*py)
 
-		angle_new = math.radians(alpha+deg)
+			
+			alpha = math.degrees(math.asin(py/dist))
+			print(py,dist)
+			alpha = transfrom_degrees(alpha, PointNode(px,py))
 
-		y_rot = math.sin(angle_new)*dist+cy
-		x_rot = math.cos(angle_new)*dist+cx
+			angle_new = math.radians(alpha+deg)
 
-		p.x = int(x_rot)
-		p.y = int(y_rot)
+			y_rot = math.sin(angle_new)*dist+cy
+			x_rot = math.cos(angle_new)*dist+cx
+
+			p.x = int(x_rot)
+			p.y = int(y_rot)
 	
