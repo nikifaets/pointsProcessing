@@ -1,7 +1,7 @@
 import cv2
 import numpy as np 
 
-casc = cv2.CascadeClassifier("src/haar_new_s10/cascade.xml")
+casc = cv2.CascadeClassifier("lbp_s10/cascade.xml")
 
 cap = cv2.VideoCapture(0)
 
