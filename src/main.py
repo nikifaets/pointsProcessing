@@ -36,7 +36,7 @@ e = 101
 correct = cr((640, 480), (20,20), 4, 3)
 rotate_angle = -38
 parent = Path(os.getcwd()).parent
-casc = cv2.CascadeClassifier("hog_s10/cascade.xml")
+casc = cv2.CascadeClassifier("lbp_s15/cascade.xml")
 pat = pt.Pattern()
 points = list()
 
