@@ -29,7 +29,7 @@ def rotatePoints(pointsList, center, deg):
 
 			
 			alpha = math.degrees(math.asin(py/dist))
-			print(py,dist)
+	
 			alpha = transfrom_degrees(alpha, PointNode(px,py))
 
 			angle_new = math.radians(alpha+deg)
