@@ -22,8 +22,6 @@ def getPoints(img,  width, height):
 
 		
 	centroids = output[3]
-	#print("labels ", num_labels)
-
 	
 
 	for p in range(1, len(centroids)):
@@ -76,7 +74,7 @@ def collectLines(pointsList):
 		
 		counter+=1
 
-		if diff_next >=8 or i == len(pointsList)-2:
+		if diff_next >=5 or i == len(pointsList)-2:
 
 			if i < len(pointsList)-2:
 				line = Line(pointsList[start:i+1])
@@ -104,47 +102,4 @@ def fixLines(lines):
 				if lines[i].length<=3:
 					del lines[i]
 
-
-		for line in lines:
-
-			if line.length > maxLen:
-				maxLen = line.length
-
-		for line in lines:
-
-			avgXDist = 0
-			xDistSum = 0
-			counter = 1
-
-			pointsList = line.getPoints()
-			pointsList.sort(key = lambda point:point.x, reverse=False)
-
-			#rp.rotatePoints(pointsList, PointNode(img.shape[1], img.shape[0]), self.rotation_angle)
-
-			for i in range(0, len(pointsList)-1):
-
-				xDistSum += pointsList[i].x
-				counter+=1
-
-			avgXDist = xDistSum/counter
-
-
-			for i in range(1, len(pointsList)-1):
-
-				if i < len(pointsList)-1:
-
-					p = pointsList[i]
-					p_prev = pointsList[i-1]
-					p_next = pointsList[i+1]
-
-					xDist_prev = math.fabs(p.x-p_prev.x)
-					xDist_next = math.fabs(p.x-p_next.x)
-
-					if xDist_next <= 0.5*avgXDist or xDist_prev <= 0.5*avgXDist:
-
-						del pointsList[i]
-
-			line = Line(pointsList)
-
-		#rp.rotatePoints(pointsList, PointNode(img.shape[1], img.shape[0]), -self.rotation_angle)
 		return lines

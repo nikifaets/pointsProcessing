@@ -3,6 +3,7 @@ import numpy as np
 import findLines as fl
 import rotatePoints as rp
 from PointNode import PointNode
+import math
 
 
 def writeVertices(file, pointsList):
@@ -18,148 +19,144 @@ def writeVertices(file, pointsList):
 		f.write(vert)
 
 
-def calculateDepth(pairs):
+def calculateDepth(point_c, point_n):
 
-	list_c = list()
-	list_n = list()
+	readp = open("pars.txt","r")
+	L = float(readp.readline())
+	d = float(readp.readline())
+	kx = float(readp.readline())
+	ky = float(readp.readline())
+	prop = float(readp.readline())
+	readp.close()
 
-	for pair in pairs:
+	point_n.x = 160-point_n.x
+	point_n.y = 120-point_n.y
 
-		point_c = pair[0]
-		point_n = pair[1]
+	point_c.x = 160-point_c.x
+	point_c.y = 120-point_c.y
+	kx = point_c.x*prop
+	ky = point_c.y*prop
+	point_c.X = d-L*kx
+	point_c.Y = -L*ky
+	point_c.Z = L
 
-		readp = open("pars.txt","r")
-		L = float(readp.readline())
-		d = float(readp.readline())
-		kx = float(readp.readline())
-		ky = float(readp.readline())
-		prop = float(readp.readline())
-		readp.close()
+	X0 = point_c.X
+	Y0 = point_c.Y
 
-		point_n.x = 160-point_n.x
-		point_n.y = 120-point_n.y
+	kx = point_n.x*prop
+	ky = point_n.y*prop
 
-		point_c.x = 160-point_c.x
-		point_c.y = 120-point_c.y
-		kx = point_c.x*prop
-		ky = point_c.y*prop
-		point_c.X = d-L*kx
-		point_c.Y = -L*ky
-		point_c.Z = L
-
-		X0 = point_c.X
-		Y0 = point_c.Y
-
-		
-
-		kx = point_n.x*prop
-		ky = point_n.y*prop
-
-		point_n.X = float(X0)*float((d/(float(X0)+L*float(kx))))
+	point_n.X = float(X0)*float((d/(float(X0)+L*float(kx))))
 
 
-		point_n.Y = float(Y0)*(d/(float(X0)+L*kx))
-		point_n.Z = L*(d/(X0+L*kx))
+	point_n.Y = float(Y0)*(d/(float(X0)+L*kx))
+	point_n.Z = L*(d/(X0+L*kx))
 
-		list_c.append(point_c)
-		list_n.append(point_n)
-	return (list_c, list_n)
+	return point_c, point_n
 
 
 
 
-def getPointPairs(lines_c, lines_n, center):
+def getLinePairs(lines_c, lines_n, center):
 
 	pairs = list()
 	pointsList = list()
+
 	for line_c in lines_c:
 
 		for line_n in lines_n:
 
-			
-			if line_c.avg_y >= line_n.avg_y-15 and line_c.avg_y<=line_n.avg_y+15:
+			if math.fabs(line_c.avg_y - line_n.avg_y) <= 15:
 
-				if line_c.length == line_n.length:
-
-					points_c = line_c.getPoints()
-					points_n = line_n.getPoints()
-
-					for i in range(0, len(points_c)):
-
-
-						c = points_c[i]
-						n = points_n[i]
-						pairs.append((c,n))
+				pairs.append((line_c, line_n))
 	return pairs
 
+def compareLines(line_c, line_n):
+
+	points_c = line_c.getPoints()
+	points_n = line_n.getPoints()
+	
+	for pn in points_n:
+
+		minDiff = 9999
+		bestCandidate = PointNode(0,0)
+
+		for pc in points_c:
+
+			diff  = math.fabs(pc.y-pn.y)
+			
+			if diff<=5:
+	
+				bestCandidate = pc
+
+		if bestCandidate != PointNode(0,0):
+			bestCandidate.sameRayCandidates.append(pn)
+
+	pointsWithDepth_c = list()
+	pointsWithDepth_n = list()
 
 
-def getDepth(cal, new, angle):
+	for pc in points_c:
+
+		if len(pc.sameRayCandidates)>0:
+
+			pc,pn = calculateDepth(pc, pn)
+			pointsWithDepth_c.append(pc)
+			pointsWithDepth_n.append(pn)
+
+	return (pointsWithDepth_c, pointsWithDepth_n)
 
 
-	h,w = cal.shape
 
-	cal_test = np.zeros((h,w,1))
-	new_test = np.zeros((h,w,1))
+def getDepth(cal, new, h,w, angle):
+
+	cal_lines = np.zeros((h,w), np.uint8)
+	new_lines = np.zeros((h,w), np.uint8)
 
 	center = PointNode(w/2, h/2)
 
 	rotation_angle = angle
 
-	ret,cal = cv2.threshold(cal, 100,255, cv2.THRESH_BINARY)
-	ret,new = cv2.threshold(new, 100,255, cv2.THRESH_BINARY)
+	pointsList_cal = cal
+	pointsList_new = new
 
-	pointsList_cal = fl.getPoints(cal, w, h)
-	pointsList_new = fl.getPoints(new, w, h)
-
-	rp.rotatePoints(pointsList_cal, PointNode(w/2, h/2), rotation_angle)
-	rp.rotatePoints(pointsList_new, PointNode(w/2, h/2), rotation_angle)
+	rp.rotatePoints(pointsList_cal, center, rotation_angle)
+	rp.rotatePoints(pointsList_new, center, rotation_angle)
 
 	lines_cal = fl.collectLines(pointsList_cal)
 	lines_new = fl.collectLines(pointsList_new)
 
 	for line in lines_cal:
-		line.draw(cal_test)
+		line.draw(cal_lines)
 
+		for p in line.pointsList:
+			cv2.circle(cal_lines, (p.x, p.y), 4, 200, -1)
 
 	for line in lines_new:
-		line.draw(new_test)
+		line.draw(new_lines)
 
-	#rp.rotatePoints(pointsList_cal, PointNode(w/2, h/2), -rotation_angle)
-	#rp.rotatePoints(pointsList_new, PointNode(w/2, h/2), -rotation_angle)
+		for p in line.pointsList:
+			cv2.circle(new_lines, (p.x, p.y), 4, 200, -1)
 
+	linePairs = getLinePairs(lines_cal, lines_new, center)
+	
+	points3d_c = list()
+	points3d_n = list()
 
+	'''cal_lines = np.zeros((h,w), np.uint8)
+	new_lines = np.zeros((h,w), np.uint8)'''
+	for pair in linePairs:
 
-	pairs = getPointPairs(lines_cal, lines_new, center)
-	rp.rotatePoints(pointsList_cal, PointNode(w/2, h/2), -rotation_angle)
-	rp.rotatePoints(pointsList_new, PointNode(w/2, h/2), -rotation_angle)
+		line_c, line_n = pair
 
-	for pair in pairs:
-		c = pair[0]
-		n = pair[1]
+		rp.rotatePoints(line_c.pointsList, center, -angle)
+		rp.rotatePoints(line_n.pointsList, center, -angle)
 
-		rp.rotatePoints([c], PointNode(w/2, h/2), -rotation_angle)
-		rp.rotatePoints([n], PointNode(w/2, h/2), -rotation_angle)
+		pointsWithDepth_c, pointsWithDepth_n = compareLines(line_c, line_n)
 
-	pointsList_cal, pointsList_new = calculateDepth(pairs)
+		points3d_c.extend(pointsWithDepth_c)
+		points3d_n.extend(pointsWithDepth_n)
 
+	return (points3d_c, points3d_n, cal_lines, new_lines)
 
-
-	return (pointsList_new, pointsList_cal, cal_test, new_test)
-
-
-'''
-cal = cv2.imread("calibrated.jpg", 0)
-new = cv2.imread("newGrid.jpg", 0)
-angle = -38
-
-pointsList, cal_test, new_test = getDepth(cal,new,angle)
-
-writeVertices("model.obj", pointsList)
-
-
-
-cv2.imshow("cal_test", cal_test)
-cv2.imshow("new_test", new_test)
-cv2.waitKey()'''
 

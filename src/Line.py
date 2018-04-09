@@ -31,6 +31,11 @@ class Line:
 
 		return self.pointsList
 
+	def sort(self):
+
+		self.pointsList.sort(key = lambda point:point.x, reverse=False)
+
+
 
 
 

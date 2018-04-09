@@ -1,4 +1,5 @@
 from Point import Point
+import math
 
 class PointNode(Point):
 
@@ -12,25 +13,7 @@ class PointNode(Point):
 		self.Y = 0
 		self.Z = 0
 		self.neighbors = list()
-
-		self.upleft = (self.nullpoint,invalidDistance)
-		self.upcenter = (self.nullpoint,invalidDistance)
-		self.upright = (self.nullpoint,invalidDistance)
-		self.right = (self.nullpoint,invalidDistance)
-		self.left = (self.nullpoint,invalidDistance)
-		self.downright = (self.nullpoint,invalidDistance)
-		self.downcenter = (self.nullpoint,invalidDistance)
-		self.downleft = (self.nullpoint,invalidDistance)
-
-		'''self.neighbors.append(self.upleft)
-		self.neighbors.append(self.upcenter)
-		self.neighbors.append(self.upright)
-		self.neighbors.append(self.right)
-		self.neighbors.append(self.left)
-		self.neighbors.append(self.downright)
-		self.neighbors.append(self.downcenter)
-		self.neighbors.append(self.downleft)'''
-
+		self.sameRayCandidates = list()
 
 
 	def write(self, point,dist):
@@ -69,3 +52,17 @@ class PointNode(Point):
 				lines.append(Line(self, point[0], point[1], 32))
 		
 		return lines
+
+	def filterCandidates(self):
+
+		minDiff = 9999
+		bestCandidate = PointNode(0,0)
+		for p in self.sameRayCandidates:
+
+			diff = math.fabs(p.y-self.y)
+
+			if diff < minDiff:
+				minDiff = diff
+				bestCandidate = p
+
+		return bestCandidate
