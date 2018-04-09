@@ -1,0 +1,1 @@
+opencv_traincascade -data lbp_s10 -vec samples_s10/samples.vec -bg negative_samples/negative_samples.txt -numPos 6700 -numNeg 20000 -featureType LBP  -numStages 15 -precalcIdxBufSize 3000  -w 10 -h 10 -numThreads 8

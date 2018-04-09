@@ -13,12 +13,12 @@ while(not ret):
 
 
 
-num = 60
+num = 200
 while(True):
 
 	ret, img = cap.read()
-	img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-	ret,img = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
+	#img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+	#ret,img = cv2.threshold(img, 240, 255, cv2.THRESH_BINARY)
 
 	if ret:
 
