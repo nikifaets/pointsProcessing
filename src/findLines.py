@@ -55,36 +55,27 @@ def drawLines(lines, width, height):
 
 	return connectedLines
 
-def collectLines(pointsList):
+def collectLines(pointsList, minYDiff):
 
-	lines = list()
-	
 	pointsList.sort(key = lambda point:point.y, reverse=False)
 
-	start = 0
-	counter = 0
-	for i in range(1, len(pointsList)-1):
+	lines = list()
+	line_curr = list()
+	line_curr.append(pointsList[0])
+	cal_idx = 0
 
-		p = pointsList[i]
-		p_prev = pointsList[i-1]
-		p_next = pointsList[i+1]
+	for i in range(0, len(pointsList)-1):
 
-		diff_prev = math.fabs(p_prev.y-p.y)
-		diff_next = math.fabs(p_next.y-p.y)
-		
-		counter+=1
+		diff = math.fabs(pointsList[i].y-pointsList[i+1].y)
 
-		if diff_next >=5 or i == len(pointsList)-2:
+		if diff <= minYDiff:
 
-			if i < len(pointsList)-2:
-				line = Line(pointsList[start:i+1])
-			else:
-				line = Line(pointsList[start:i+2])
-			start = i+1
-			counter = 0
-			lines.append(line)
+			line_curr.append(pointsList[i+1])
 
-	lines = fixLines(lines)
+		else:
+
+			lines.append(Line(line_curr))
+			line_curr = []
 
 	return lines
 

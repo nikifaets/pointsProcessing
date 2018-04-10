@@ -6,6 +6,25 @@ from PointNode import PointNode
 import math
 
 
+def getPointsPairs(cal, new, minYDiff):
+
+	cal.sort(key = lambda point:point.y, reverse=False)
+	new.sort(key = lambda point:point.y, reverse=False)
+
+	lines_cal = list()
+	line_curr = list()
+	line_curr.append(cal[0])
+	cal_idx = 0
+	for i in range(0, len(cal)-1):
+
+		diff = math.fabs(cal[i].y-cal[i+1].y)
+		if diff <= minYDiff:
+			line_curr.append(cal[i+1])
+		else:
+			lines_cal.append(Line(line_curr))
+			line_curr = []
+
+
 def writeVertices(file, pointsList):
 
 
@@ -120,42 +139,27 @@ def getDepth(cal, new, h,w, angle):
 	pointsList_cal = cal
 	pointsList_new = new
 
-	rp.rotatePoints(pointsList_cal, center, rotation_angle)
-	rp.rotatePoints(pointsList_new, center, rotation_angle)
+	minYDiff = 5
+	lines_cal = fl.collectLines(pointsList_cal, minYDiff)
+	lines_new = fl.collectLines(pointsList_new, minYDiff)
 
-	lines_cal = fl.collectLines(pointsList_cal)
-	lines_new = fl.collectLines(pointsList_new)
 
 	for line in lines_cal:
+
 		line.draw(cal_lines)
 
-		for p in line.pointsList:
-			cv2.circle(cal_lines, (p.x, p.y), 4, 200, -1)
-
+		#for p in line.pointsList:
+			#cv2.circle(cal_lines, (p.x, p.y), 4, 200, -1)
+	print("first")
 	for line in lines_new:
 		line.draw(new_lines)
 
-		for p in line.pointsList:
-			cv2.circle(new_lines, (p.x, p.y), 4, 200, -1)
+		#for p in line.pointsList:
+			#cv2.circle(new_lines, (p.x, p.y), 4, 200, -1)
 
-	linePairs = getLinePairs(lines_cal, lines_new, center)
-	
-	points3d_c = list()
+	print("sdf")
+	point3d_c = list()
 	points3d_n = list()
-
-	'''cal_lines = np.zeros((h,w), np.uint8)
-	new_lines = np.zeros((h,w), np.uint8)'''
-	for pair in linePairs:
-
-		line_c, line_n = pair
-
-		rp.rotatePoints(line_c.pointsList, center, -angle)
-		rp.rotatePoints(line_n.pointsList, center, -angle)
-
-		pointsWithDepth_c, pointsWithDepth_n = compareLines(line_c, line_n)
-
-		points3d_c.extend(pointsWithDepth_c)
-		points3d_n.extend(pointsWithDepth_n)
 
 	return (points3d_c, points3d_n, cal_lines, new_lines)
 

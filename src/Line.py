@@ -25,6 +25,10 @@ class Line:
 		for point in self.pointsList:
 			sum += point.y
 		num = len(self.pointsList)
+
+		if num <= 0:
+			return 0
+
 		return sum/num
 
 	def getPoints(self):
