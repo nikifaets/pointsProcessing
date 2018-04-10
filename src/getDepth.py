@@ -18,6 +18,9 @@ def getPointsPairs(cal, new, minYDiff):
 		line_cal = fl.findClosestY(p, cal, minYDiff)
 		line_new = fl.findClosestY(p, new, minYDiff)
 
+		print("POINT ", p.y)
+		#for p_c in line_cal:
+			#print("FOUND MATCH ", p_c.y)
 		best_pair = findBestMatch(p, line_cal, line_new)
 
 		if best_pair != PointNode(0,0):
@@ -44,9 +47,19 @@ def findBestMatch(point, line_cal, line_new):
 				break
 	if count == 1:
 
-		print("FOUND MATCH: ", point.y, best.y)
+		#print("FOUND MATCH: ", point.y, best.y)
 		return best
+	if count == 0:
 
+		minDiff = 999
+		for p_cal in line_cal:
+
+			diff = math.fabs(p_cal.y-point.y)
+			if diff < minDiff:
+				minDiff = diff
+				best = p_cal
+
+		return best
 	return PointNode(0,0)
 
 
@@ -129,7 +142,7 @@ def compareLines(line_c, line_n):
 
 			diff  = math.fabs(pc.y-pn.y)
 			
-			if diff<=5:
+			if diff<=2:
 	
 				bestCandidate = pc
 
@@ -164,7 +177,7 @@ def getDepth(cal, new, h,w, angle):
 	pointsList_cal = cal
 	pointsList_new = new
 
-	minYDiff = 7
+	minYDiff = 5
 	
 	pairs = getPointsPairs(pointsList_cal, pointsList_new, minYDiff)
 

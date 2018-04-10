@@ -15,8 +15,8 @@ import rotatePoints as rp
 from PointNode import PointNode
 import getDepth as gd
 
-cal = cv2.imread("calibrated.jpg", 0)
-new = cv2.imread("new_4.jpg", 0)
+cal = cv2.imread(path+"/test/testCal4.jpg", 0)
+new = cv2.imread(path+"/test/testNew4.jpg", 0)
 h,w = cal.shape
 foundPoints_cal = np.zeros(cal.shape, np.uint8)
 foundPoints_new = np.zeros(cal.shape, np.uint8)
