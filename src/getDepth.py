@@ -3,26 +3,51 @@ import numpy as np
 import findLines as fl
 import rotatePoints as rp
 from PointNode import PointNode
+from Line import Line
 import math
 
 
 def getPointsPairs(cal, new, minYDiff):
 
-	cal.sort(key = lambda point:point.y, reverse=False)
-	new.sort(key = lambda point:point.y, reverse=False)
-
 	lines_cal = list()
-	line_curr = list()
-	line_curr.append(cal[0])
-	cal_idx = 0
-	for i in range(0, len(cal)-1):
+	lines_new = list()
+	pairs = list()
 
-		diff = math.fabs(cal[i].y-cal[i+1].y)
-		if diff <= minYDiff:
-			line_curr.append(cal[i+1])
-		else:
-			lines_cal.append(Line(line_curr))
-			line_curr = []
+	for p in new:
+
+		line_cal = fl.findClosestY(p, cal, minYDiff)
+		line_new = fl.findClosestY(p, new, minYDiff)
+
+		best_pair = findBestMatch(p, line_cal, line_new)
+
+		if best_pair != PointNode(0,0):
+			pairs.append((p, best_pair))
+
+	return pairs
+
+def findBestMatch(point, line_cal, line_new):
+
+	line_cal.sort(key = lambda p: p.y, reverse = False)
+	line_new.sort(key = lambda p: p.y, reverse = False)
+
+	#check if there is one closest point:
+
+	count = 0
+	best = PointNode(0,0)
+	for p_cal in line_cal:
+
+		if int(p_cal.y) == int(point.y):
+			count+=1
+			best = p_cal
+
+			if(count >= 2):
+				break
+	if count == 1:
+
+		print("FOUND MATCH: ", point.y, best.y)
+		return best
+
+	return PointNode(0,0)
 
 
 def writeVertices(file, pointsList):
@@ -139,28 +164,20 @@ def getDepth(cal, new, h,w, angle):
 	pointsList_cal = cal
 	pointsList_new = new
 
-	minYDiff = 5
-	lines_cal = fl.collectLines(pointsList_cal, minYDiff)
-	lines_new = fl.collectLines(pointsList_new, minYDiff)
+	minYDiff = 7
+	
+	pairs = getPointsPairs(pointsList_cal, pointsList_new, minYDiff)
 
-
-	for line in lines_cal:
-
-		line.draw(cal_lines)
-
-		#for p in line.pointsList:
-			#cv2.circle(cal_lines, (p.x, p.y), 4, 200, -1)
-	print("first")
-	for line in lines_new:
-		line.draw(new_lines)
-
-		#for p in line.pointsList:
-			#cv2.circle(new_lines, (p.x, p.y), 4, 200, -1)
-
-	print("sdf")
-	point3d_c = list()
+	points3d_c = list()
 	points3d_n = list()
 
-	return (points3d_c, points3d_n, cal_lines, new_lines)
+	for pair in pairs:
+
+		p_c, p_n = pair
+		p_c, p_n = calculateDepth(p_c, p_n)
+		points3d_c.append(p_c)
+		points3d_n.append(p_n)
+
+	return (points3d_c, points3d_n)
 
 

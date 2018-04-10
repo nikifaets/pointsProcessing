@@ -16,7 +16,7 @@ from PointNode import PointNode
 import getDepth as gd
 
 cal = cv2.imread("calibrated.jpg", 0)
-new = cv2.imread("new_1.jpg", 0)
+new = cv2.imread("new_4.jpg", 0)
 h,w = cal.shape
 foundPoints_cal = np.zeros(cal.shape, np.uint8)
 foundPoints_new = np.zeros(cal.shape, np.uint8)
@@ -37,16 +37,16 @@ mid = PointNode(cal.shape[1]/2, cal.shape[0]/2)
 deg = -40
 
 print("dfg")
-pointsList_n, pointsList_c, cal_lines, new_lines = gd.getDepth(pointsList_cal, pointsList_new, h, w, deg)
+pointsList_n, pointsList_c = gd.getDepth(pointsList_cal, pointsList_new, h, w, deg)
 
 print(len(pointsList_n), len(pointsList_c))
-#gd.writeVertices("model.obj", pointsList_n)
-#gd.writeVertices("calibrated.obj", pointsList_c)
+gd.writeVertices("model.obj", pointsList_n)
+gd.writeVertices("calibrated.obj", pointsList_c)
 
 
 
-cv2.imshow("cal", cal_lines)
-cv2.imshow("new", new_lines)
+#cv2.imshow("cal", cal_lines)
+#cv2.imshow("new", new_lines)
 cv2.imshow("found_c", foundPoints_cal)
 cv2.imshow("found_n", foundPoints_new)
 cv2.waitKey()

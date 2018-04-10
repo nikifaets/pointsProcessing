@@ -17,12 +17,15 @@ class Line:
 			y1 = self.pointsList[i].y
 			x2 = self.pointsList[i+1].x
 			y2 = self.pointsList[i+1].y
-			cv2.line(img, (x1,y1), (x2,y2), 255, 1)
+			cv2.line(img, (int(x1), int(y1)), (int(x2),int(y2)), 255, 1)
 
 	def mid_y(self):
 
 		sum = 0
 		for point in self.pointsList:
+
+			point.x = int(point.x)
+			point.y = int(point.y)
 			sum += point.y
 		num = len(self.pointsList)
 
