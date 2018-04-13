@@ -59,28 +59,55 @@ def collectLines(pointsList, minYDiff):
 
 	pointsList.sort(key = lambda point:point.y, reverse=False)
 
+	for p in pointsList:
+		print (p.y)
 	lines = list()
 	line_curr = list()
 	line_curr.append(pointsList[0])
+	avg_y = pointsList[0].y
 	cal_idx = 0
 
 	for i in range(0, len(pointsList)-1):
 
-		diff = math.fabs(pointsList[i].y-pointsList[i+1].y)
+		pointsList[i].x = int(pointsList[i].x)
+		pointsList[i].y = int(pointsList[i].y)
+		diff = math.fabs(avg_y-pointsList[i+1].y)
 
 		if diff <= minYDiff:
 
 			line_curr.append(pointsList[i+1])
 
+			avg_y = 0
+
+			for p in line_curr:
+				avg_y += p.y
+			avg_y = avg_y/len(line_curr)
+
 		else:
 
 			lines.append(Line(line_curr))
 			line_curr = []
+			line_curr.append(pointsList[i+1])
+			avg_y = pointsList[i+1].y
 
 	return lines
 
+def findClosestY(point, pointsList, minYDiff):
 
+	pointsList.sort(key = lambda point:point.y, reverse=False)
 
+	line = list()
+
+	for p_new in pointsList:
+
+		if math.fabs(point.y-p_new.y) <= minYDiff:
+				line.append(p_new)
+
+		else: 
+			if p_new.y > point.y:
+				break
+
+	return line
 
 def fixLines(lines):
 
