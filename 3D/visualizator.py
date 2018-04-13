@@ -37,8 +37,16 @@ mid = PointNode(cal.shape[1]/2, cal.shape[0]/2)
 deg = -40
 
 print("dfg")
-pointsList_n, pointsList_c = gd.getDepth(pointsList_cal, pointsList_new, h, w, deg)
+lines_cal, lines_new = gd.getDepth(pointsList_cal, pointsList_new, h, w, deg)
+print("sdfdsfdsf")
+for p_n in lines_new:
 
+	print("draw")
+	for p_c in lines_cal:
+		print("dra2w")
+		cv2.line(foundPoints_cal, (p.x, p.y), (p_c.x, p_c.y), 200, 2)
+		print("line")
+print("sdfdsf")
 print(len(pointsList_n), len(pointsList_c))
 gd.writeVertices("model.obj", pointsList_n)
 gd.writeVertices("calibrated.obj", pointsList_c)

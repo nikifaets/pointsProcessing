@@ -18,15 +18,7 @@ def getPointsPairs(cal, new, minYDiff):
 		line_cal = fl.findClosestY(p, cal, minYDiff)
 		line_new = fl.findClosestY(p, new, minYDiff)
 
-		print("POINT ", p.y)
-		#for p_c in line_cal:
-			#print("FOUND MATCH ", p_c.y)
-		best_pair = findBestMatch(p, line_cal, line_new)
-
-		if best_pair != PointNode(0,0):
-			pairs.append((p, best_pair))
-
-	return pairs
+	return (line_cal, line_new)
 
 def findBestMatch(point, line_cal, line_new):
 
