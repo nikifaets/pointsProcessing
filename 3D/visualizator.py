@@ -15,8 +15,8 @@ import rotatePoints as rp
 from PointNode import PointNode
 import getDepth as gd
 
-cal = cv2.imread(path+"/test/testCal4.jpg", 0)
-new = cv2.imread(path+"/test/testNew4.jpg", 0)
+cal = cv2.imread("calibrated_1.jpg", 0)
+new = cv2.imread("sixPoint.jpg", 0)
 h,w = cal.shape
 foundPoints_cal = np.zeros(cal.shape, np.uint8)
 foundPoints_new = np.zeros(cal.shape, np.uint8)
@@ -36,20 +36,21 @@ for p in pointsList_new:
 mid = PointNode(cal.shape[1]/2, cal.shape[0]/2)
 deg = -40
 
-print("dfg")
-lines_cal, lines_new = gd.getDepth(pointsList_cal, pointsList_new, h, w, deg)
-print("sdfdsfdsf")
-for p_n in lines_new:
 
-	print("draw")
-	for p_c in lines_cal:
-		print("dra2w")
-		cv2.line(foundPoints_cal, (p.x, p.y), (p_c.x, p_c.y), 200, 2)
-		print("line")
-print("sdfdsf")
-print(len(pointsList_n), len(pointsList_c))
-gd.writeVertices("model.obj", pointsList_n)
-gd.writeVertices("calibrated.obj", pointsList_c)
+pairs = gd.getPointsPairs(pointsList_cal, pointsList_new, 30)
+print(pairs, "sdf")
+
+for pair in pairs:
+
+	print(len(pair))
+	print(pair)
+	p_n, line = pair
+
+	print(p_n)
+	for p_c in line:
+
+		cv2.line(foundPoints_cal, (int(p_n.x), int(p_n.y)), (int(p_c.x), int(p_c.y)), 200, 2)
+
 
 
 
