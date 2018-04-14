@@ -13,6 +13,7 @@ import rotatePoints as rp
 import os
 from pathlib import Path
 import roiSelector as rs 
+import getDepth as gd
 
 ret = False
 cam = 1
@@ -51,7 +52,6 @@ while(True):
 	img_h, img_w, img_channels = img.shape
 	detected = np.zeros((img_h, img_w, 1), np.uint8)
 	fixed = np.zeros((img_h, img_w, 1), np.uint8)
-	lines_detected = np.zeros((img_h, img_w, 1), np.uint8)
 
 	rois, binary = rs.getROI(img)
 
@@ -67,23 +67,12 @@ while(True):
 
 	# get list of points, which appear more frequently and visualize them in the image "fixed"
 	pointsList_new = correct.getFixedData()
-	rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), rotate_angle)
 
 	for p in pointsList_new:
 		if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
 
 			cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
 
-
-	#create lines from the points with similar y coordinate and visualize them in image "lines"
-
-	lines = fl.collectLines(pointsList_new)
-
-	for line in lines:
-		line.draw(lines_detected)
-
-
-	cv2.imshow("lines", lines_detected)
 	cv2.imshow("img", img)
 	cv2.imshow("points", detected)
 	cv2.imshow("fixed", fixed)
@@ -93,8 +82,6 @@ while(True):
 	if k == s:
 
 		fixed.fill(0)
-		rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), -rotate_angle)
-
 		
 		cl = calibrator()
 
@@ -111,16 +98,16 @@ while(True):
 
 
 		print("got C")
-		pat.getDepth(pointsList)
+		points3d_n = gd.getDepth(pointsList)
 		fixed.fill(0)
-
-		rp.rotatePoints(pointsList_new, PointNode(img_w/2, img_h/2), -rotate_angle)
 
 		for p in pointsList_new:
 			if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
 
 				cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
 
+
+		gd.writeVertices("model.obj", points3d_n)
 		cv2.imwrite("newGrid.jpg", fixed)
 
 	k = cv2.waitKey(1)

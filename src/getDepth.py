@@ -165,17 +165,10 @@ def compareLines(line_c, line_n):
 
 def getDepth(cal, new, h,w, angle):
 
-	cal_lines = np.zeros((h,w), np.uint8)
-	new_lines = np.zeros((h,w), np.uint8)
-
-	center = PointNode(w/2, h/2)
-
-	rotation_angle = angle
-
 	pointsList_cal = cal
 	pointsList_new = new
 
-	minYDiff = 5
+	minYDiff = 3
 	
 	pairs = getPointsPairs(pointsList_cal, pointsList_new, minYDiff)
 
@@ -189,6 +182,6 @@ def getDepth(cal, new, h,w, angle):
 		points3d_c.append(p_c)
 		points3d_n.append(p_n)
 
-	return (points3d_c, points3d_n)
+	return points3d_n
 
 
