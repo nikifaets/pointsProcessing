@@ -5,8 +5,7 @@ from extractor import getPoints
 import laserFindPoints as cpt
 import findLines as fl
 import transformToPoints as tr
-from calibration import calibrator
-import pattern as pt
+import calibration as cal
 from PointNode import PointNode
 from CorrectSignal import CorrectSignal as cr
 import rotatePoints as rp
@@ -17,6 +16,15 @@ import getDepth as gd
 
 ret = False
 cam = 1
+points3d_cal = list()
+#load calibrated image if any
+
+files = os.listdir()
+for file in files:
+	if file == "calibrated.jpg":
+		points3d_cal = cal.calibrateFromImage(file, "pars.txt")
+
+
 while(not ret):
  	
 	cap = cv2.VideoCapture(cam)
@@ -39,7 +47,6 @@ correct = cr((640, 480), (10,10), 4, 3)
 rotate_angle = -38
 parent = Path(os.getcwd()).parent
 casc = cv2.CascadeClassifier("lbp_s10/cascade.xml")
-pat = pt.Pattern()
 points = list()
 
 
@@ -48,17 +55,20 @@ while(True):
 	#load images to work with and list of points
 	pointsList = list()
 	ret, img = cap.read()
+	img_pure = np.zeros(img.shape, np.uint8)
+	img_pure = np.copy(img)
 	img = cv2.GaussianBlur(img, (3,3),2)
 	img_h, img_w, img_channels = img.shape
 	detected = np.zeros((img_h, img_w, 1), np.uint8)
 	fixed = np.zeros((img_h, img_w, 1), np.uint8)
-
 	rois, binary = rs.getROI(img)
 
 
 	# get list of points and visualize it in the image "detected"
 	pointsList = getPoints(img, casc, rois)
 
+	#if len(pointsList) > 0: 
+	#	print(pointsList[0].x, pointsList[0].y)
 	for p in pointsList:	
 
 		cv2.circle(detected, (int(p.x),int(p.y)), 5, 200, -1)
@@ -73,6 +83,8 @@ while(True):
 
 			cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
 
+
+	cv2.imshow("img_pure", img_pure)
 	cv2.imshow("img", img)
 	cv2.imshow("points", detected)
 	cv2.imshow("fixed", fixed)
@@ -81,40 +93,26 @@ while(True):
 	k = cv2.waitKey(1)
 	if k == s:
 
-		fixed.fill(0)
-		
-		cl = calibrator()
-
-		for p in pointsList_new:
-			if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
-
-				cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
-
-		pat = pt.Pattern()
-		cl.calibrate(pointsList_new, fixed)
+		points3d_cal = cal.calibrate(pointsList_new, "pars.txt")
 		cv2.imwrite("calibrated.jpg", fixed)
 
 	if k == c:
 
+		if len(points3d_cal) > 0: 
+			points3d_new = gd.getDepth(pointList, pointsList_new)
+			gd.writeVertices("model.obj", points3d_new)
+			cv2.imwrite("newGrid.jpg", fixed)
+		else:
 
-		print("got C")
-		points3d_n = gd.getDepth(pointsList)
-		fixed.fill(0)
+			print("Please calibrate first")
 
-		for p in pointsList_new:
-			if p.y >=0 and p.y < img_h and p.x >=0 and p.x< img_w:
-
-				cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
-
-
-		gd.writeVertices("model.obj", points3d_n)
-		cv2.imwrite("newGrid.jpg", fixed)
-
-	k = cv2.waitKey(1)
 	if k == e:
 		print("got E")
 		
-		cv2.imwrite("trainClassifier"+str(taken)+".jpg", img)
+		cv2.imwrite("pure" + str(taken)+".jpg", img_pure)
+		cv2.imwrite("threshold.jpg", binary)
+		cv2.imwrite("classifier.jpg", img)
+		cv2.imwrite("point"+str(taken)+".jpg", fixed)
 		taken+=1
 	
 	if k == q:

@@ -8,9 +8,9 @@ import queue
 import time
 from Line import Line
 
-def getPoints(img,  width, height):
+def getPoints(img):
 
-
+	height,width = img.shape
 	pointsList = list()
 	draft = np.zeros((height, width,1), np.uint8)
 	ret,img = cv2.threshold(img, 100,255, cv2.THRESH_BINARY)
