@@ -72,7 +72,7 @@ def writeVertices(file, pointsList):
 		f.write(vert)
 
 
-def calculateDepth(point_c, point_n):
+def calculateDepth(pc, pn):
 
 	readp = open("pars.txt","r")
 	L = float(readp.readline())
@@ -82,6 +82,8 @@ def calculateDepth(point_c, point_n):
 	prop = float(readp.readline())
 	readp.close()
 
+	point_n = PointNode(pn.x, pn.y)
+	point_c = PointNode(pc.x, pc.y)
 	point_n.x = 160-point_n.x
 	point_n.y = 120-point_n.y
 

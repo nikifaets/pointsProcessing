@@ -98,14 +98,20 @@ def findClosestY(point, pointsList, minYDiff):
 
 	line = list()
 
+	minDiff = 999
 	for p_new in pointsList:
 
-		if math.fabs(point.y-p_new.y) <= minYDiff:
-				line.append(p_new)
+		if math.fabs(point.y-p_new.y) <= minDiff:
+				minDiff = math.fabs(point.y-p_new.y)
 
-		else: 
+		'''else: 
 			if p_new.y > point.y:
-				break
+				break'''
+
+	for p_new in pointsList:
+
+		if math.fabs(point.y-p_new.y) <= minDiff:
+				line.append(p_new)
 
 	return line
 
