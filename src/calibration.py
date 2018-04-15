@@ -32,8 +32,6 @@ def calibrate(points, file):
 		point.Y = -L*ky
 		point.Z = L
 
-		for p in points:
-			print(p.X, p.Y, p.Z)
 		
 
 		gd.writeVertices("calibrated.obj", points)

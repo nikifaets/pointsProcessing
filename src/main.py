@@ -13,10 +13,12 @@ import os
 from pathlib import Path
 import roiSelector as rs 
 import getDepth as gd
+import canvas
 
 ret = False
 cam = 1
 pointsList_cal = list()
+taken = 20
 #load calibrated image if any
 
 files = os.listdir()
@@ -35,13 +37,6 @@ cap.set(3,480)
 cap.set(4,640)
 projecting = False
 
-taken = 20
-s = 115
-a = 97
-q = 113
-c = 99
-b = 98
-e = 101
 
 correct = cr((640, 480), (10,10), 4, 3)
 rotate_angle = -38
@@ -83,6 +78,9 @@ while(True):
 
 			cv2.circle(fixed, (int(p.x), int(p.y)), 4, 200, -1)
 
+	points3d_new = list()
+	if len(pointsList_cal) > 0: 
+			points3d_new = gd.getDepth(pointsList_cal, pointsList_new)
 
 	cv2.imshow("img_pure", img_pure)
 	cv2.imshow("img", img)
@@ -91,7 +89,7 @@ while(True):
 	cv2.imshow("binary", binary)
 
 	k = cv2.waitKey(1)
-	if k == s:
+	if k == ord('s'):
 
 		pointsList_cal = cal.calibrate(pointsList_new, "pars.txt")
 		cv2.imwrite("calibrated.jpg", fixed)
@@ -107,7 +105,7 @@ while(True):
 
 			print("Please calibrate first")
 
-	if k == e:
+	if k == ord('e'):
 		print("got E")
 		
 		cv2.imwrite("pure" + str(taken)+".jpg", img_pure)
@@ -116,5 +114,5 @@ while(True):
 		cv2.imwrite("point"+str(taken)+".jpg", fixed)
 		taken+=1
 	
-	if k == q:
+	if k == ord('q'):
 		break
