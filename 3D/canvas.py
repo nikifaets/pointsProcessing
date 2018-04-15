@@ -40,5 +40,5 @@ def createScene(pointsList):
         
     renderer.SetBackground(colors.GetColor3d("DarkGreen"))
 
-    renderWindow.Render()
-    renderWindowInteractor.Start()
+    while(True):
+        renderWindow.Render()

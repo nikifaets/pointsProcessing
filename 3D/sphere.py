@@ -24,15 +24,16 @@ def createSphere(x,y,z):
 
 def createScene(pointsList):
 
+    print("sdf")
     colors = vtk.vtkNamedColors()
 
     renderer = vtk.vtkRenderer()
     renderWindow = vtk.vtkRenderWindow()
     renderWindow.SetWindowName("Sphere")
     renderWindow.AddRenderer(renderer)
+    print("fds")
     renderWindowInteractor = vtk.vtkRenderWindowInteractor()
     renderWindowInteractor.SetRenderWindow(renderWindow)
-
     for point in pointsList:
 
         sphere = createSphere(point.X, point.Y, point.Z)
@@ -40,5 +41,4 @@ def createScene(pointsList):
         
     renderer.SetBackground(colors.GetColor3d("DarkGreen"))
 
-    renderWindow.Render()
-    renderWindowInteractor.Start()
+    return renderWindow
