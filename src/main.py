@@ -16,13 +16,13 @@ import getDepth as gd
 
 ret = False
 cam = 1
-points3d_cal = list()
+pointsList_cal = list()
 #load calibrated image if any
 
 files = os.listdir()
 for file in files:
 	if file == "calibrated.jpg":
-		points3d_cal = cal.calibrateFromImage(file, "pars.txt")
+		pointsList_cal = cal.calibrateFromImage(file, "pars.txt")
 
 
 while(not ret):
@@ -93,13 +93,14 @@ while(True):
 	k = cv2.waitKey(1)
 	if k == s:
 
-		points3d_cal = cal.calibrate(pointsList_new, "pars.txt")
+		pointsList_cal = cal.calibrate(pointsList_new, "pars.txt")
 		cv2.imwrite("calibrated.jpg", fixed)
 
-	if k == c:
+	if k == ord('c'):
 
-		if len(points3d_cal) > 0: 
-			points3d_new = gd.getDepth(pointList, pointsList_new)
+		print("C")
+		if len(pointsList_cal) > 0: 
+			points3d_new = gd.getDepth(pointsList_cal, pointsList_new)
 			gd.writeVertices("model.obj", points3d_new)
 			cv2.imwrite("newGrid.jpg", fixed)
 		else:

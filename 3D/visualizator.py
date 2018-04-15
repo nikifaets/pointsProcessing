@@ -15,8 +15,8 @@ import rotatePoints as rp
 from PointNode import PointNode
 import getDepth as gd
 
-cal = cv2.imread("calibrated.jpg", 0)
-new = cv2.imread("point26.jpg", 0)
+cal = cv2.imread("calibrated_1.jpg", 0)
+new = cv2.imread("newGrid.jpg", 0)
 h,w = cal.shape
 foundPoints_cal = np.zeros(cal.shape, np.uint8)
 foundPoints_new = np.zeros(cal.shape, np.uint8)
@@ -24,8 +24,8 @@ foundPoints_new = np.zeros(cal.shape, np.uint8)
 ret, cal = cv2.threshold(cal, 100,255, cv2.THRESH_BINARY)
 ret, new = cv2.threshold(new, 100,255, cv2.THRESH_BINARY)
 
-pointsList_cal = fs.getPoints(cal, cal.shape[1], cal.shape[0])
-pointsList_new = fs.getPoints(new, new.shape[1], new.shape[0])
+pointsList_cal = fs.getPoints(cal)
+pointsList_new = fs.getPoints(new)
 
 for p in pointsList_cal:
 	cv2.circle(foundPoints_cal, (int(p.x), int(p.y)), 3, 200, -1)

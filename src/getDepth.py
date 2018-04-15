@@ -163,7 +163,7 @@ def compareLines(line_c, line_n):
 
 
 
-def getDepth(cal, new, h,w, angle):
+def getDepth(cal, new):
 
 	pointsList_cal = cal
 	pointsList_new = new
@@ -177,10 +177,14 @@ def getDepth(cal, new, h,w, angle):
 
 	for pair in pairs:
 
-		p_c, p_n = pair
-		p_c, p_n = calculateDepth(p_c, p_n)
-		points3d_c.append(p_c)
-		points3d_n.append(p_n)
+		p_n, line = pair
+		for p_c in line:
+
+			pc, pn = calculateDepth(p_c, p_n)
+			points3d_c.append(pc)
+			points3d_n.append(pn)
+
+	
 
 	return points3d_n
 
